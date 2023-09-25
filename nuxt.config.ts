@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     [
       "@nuxtjs/google-fonts",
       {
+        download: false,
         families: {
           "IBM Plex Sans": {
             wght: [400, 600, 700],
