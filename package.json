@@ -15,8 +15,7 @@
     "@nuxtjs/google-fonts": "^3.0.2",
     "@nuxtjs/strapi": "^1.9.3",
     "@nuxtjs/tailwindcss": "^6.8.0",
-    "@vueuse/nuxt": "^10.4.1",
-    "nuxt": "^3.7.3"
+    "@vueuse/nuxt": "^10.4.1"
   },
   "dependencies": {
     "@slidev/parser": "^0.43.5",
@@ -28,6 +27,7 @@
     "markdown-it": "^13.0.1",
     "markdown-it-external-links": "^0.0.6",
     "mitt": "^3.0.1",
-    "unplugin-icons": "^0.17.0"
+    "unplugin-icons": "^0.17.0",
+    "vue": "^3.3.4"
   }
 }
