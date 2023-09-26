@@ -1,5 +1,8 @@
 {
   "name": "nuxt-app",
+  "engines": {
+      "node": "16.x"
+   },
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,7 +10,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "start": "node .output/server/index.mjs"
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.1.12",
