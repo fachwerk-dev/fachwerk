@@ -1,7 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  $development: {
-    vite: { resolve: { alias: { vue: "vue/dist/vue.esm-bundler.js" } } },
+  hooks: {
+    "vite:extendConfig": (config, { isClient }) => {
+      if (isClient) {
+        //@ts-ignore
+        config.resolve.alias.vue = "vue/dist/vue.esm-bundler.js";
+      }
+    },
   },
   devtools: { enabled: true },
   modules: [
