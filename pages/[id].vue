@@ -17,6 +17,7 @@ useScriptTag("https://cdn.tailwindcss.com", () => {
 
 const route = useRoute();
 const { findOne, update } = useStrapi();
+const user = useStrapiUser();
 
 const row = ref(-1);
 const activePage = ref(0);
@@ -72,7 +73,9 @@ watchDebounced(
   content,
   async (c) => {
     try {
-      await update("documents", id, { content: content.value });
+      if (user) {
+        await update("documents", id, { content: content.value });
+      }
     } catch (e) {
       console.log(e);
     }
