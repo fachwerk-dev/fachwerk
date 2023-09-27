@@ -165,11 +165,11 @@ on("next", prev);
     <textarea
       v-show="[0, 1].includes(mode)"
       ref="textarea"
-      class="w-full h-[33vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-scroll"
+      class="block w-full h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
       v-model="content"
       @click="onTextarea"
     />
-    <div class="overflow-y-scroll">
+    <div class="overflow-y-auto h-full">
       <Page
         v-for="(page, i) in pages"
         :active="i === activePage"
