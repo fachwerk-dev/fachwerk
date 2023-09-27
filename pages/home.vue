@@ -58,7 +58,9 @@ function timeAgo(isoTimestamp) {
       </NuxtLink>
     </div>
     <div class="p-6 md:px-16 md:py-12">
-      <div class="flex gap-4 flex-col md:flex-row justify-between items-center">
+      <div
+        class="flex gap-4 flex-col md:flex-row md:justify-between md:items-center"
+      >
         <h1 class="font-bold text-5xl md:text-6xl text-gray-800 tracking-tight">
           ▦ Fachwerk
         </h1>
