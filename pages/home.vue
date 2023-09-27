@@ -47,7 +47,7 @@ function timeAgo(isoTimestamp) {
 </script>
 
 <template>
-  <div class="md:grid md:grid-cols-[auto_1fr] min-h-screen">
+  <div class="md:grid md:grid-cols-[auto_1fr] min-h-screen bg-gray-50">
     <div
       class="sticky md:block top-0 bg-gray-800 py-5 px-4 flex md:flex-col gap-8 transition border-gray-700 border-b md:border-none"
     >
