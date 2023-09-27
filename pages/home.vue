@@ -65,6 +65,7 @@ function timeAgo(isoTimestamp) {
           ▦ Fachwerk
         </h1>
         <button
+          v-if="user"
           @click="onCreate"
           class="md:w-auto font-semibold text-center text-lg rounded bg-gray-300 hover:bg-gray-400 transition px-4 py-2"
         >
@@ -84,10 +85,9 @@ function timeAgo(isoTimestamp) {
             {{ d.content }}
           </div>
           <div class="py-3 px-4 flex items-center gap-1 bg-white">
-            <div class="text-gray-500">
-              <span class="font-semibold">{{ d.id }}</span> by
-              {{ d.user.username }}
-              {{ timeAgo(d.updatedAt) }}
+            <div class="text-gray-500 flex justify-between w-full">
+              <div class="font-semibold">{{ d.id }}</div>
+              <div>Updated {{ timeAgo(d.updatedAt) }}</div>
             </div>
           </div>
         </NuxtLink>
