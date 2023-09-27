@@ -42,7 +42,7 @@ const onSubmit = async () => {
       >
         <input
           v-model="form.identifier"
-          placeholder="Email"
+          placeholder="username"
           type="text"
           name="email"
           required

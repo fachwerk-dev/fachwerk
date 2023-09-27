@@ -18,17 +18,37 @@ useScriptTag("https://cdn.tailwindcss.com", () => {
 const route = useRoute();
 const { findOne, update } = useStrapi();
 
+const row = ref(-1);
+const activePage = ref(0);
+const textarea = ref();
+const { focused } = useFocus(textarea, { initialValue: false });
+
+const modes = [
+  resolveComponent("IconMode0"),
+  resolveComponent("IconMode1"),
+  resolveComponent("IconMode2"),
+  resolveComponent("IconMode3"),
+];
+const mode = ref(0);
+
 const id = route.params.id as string;
 
 const { data: doc } = await useAsyncData("document-" + id, () =>
   findOne("documents", id, {
-    populate: ["users_permissions_user"],
+    populate: ["user"],
   }).then((res) => parseStrapi(res))
 );
-const content = ref(doc.value.body);
+onMounted(() => {
+  if (!doc.value.content) {
+    focused.value = true;
+  }
+});
+
+const content = ref(doc.value.content);
 
 const defaultClass = "p-5 prose max-w-none";
 
+const pages = ref([]);
 watchDebounced(
   content,
   async (c) => {
@@ -52,18 +72,13 @@ watchDebounced(
   content,
   async (c) => {
     try {
-      await update("documents", id, { body: content.value });
+      await update("documents", id, { content: content.value });
     } catch (e) {
       console.log(e);
     }
   },
   { debounce: 3000 }
 );
-
-const row = ref(-1);
-const activePage = ref(0);
-
-const textarea = ref();
 const onTextarea = () => {
   row.value = textarea.value.value
     .substr(0, textarea.value.selectionStart)
@@ -74,17 +89,15 @@ const onTextarea = () => {
   activePage.value = index > -1 ? index : 0;
 };
 
-const pages = computedAsync(async () => {
-  const pageData = await parsePage(content.value);
-  return pageData.slides.map((page) => {
-    return {
-      ...page,
-      parsedContent: compileMarkdown(page.content),
-    };
-  });
-});
-
-const { focused } = useFocus(textarea, { initialValue: false });
+// const pages = computedAsync(async () => {
+//   const pageData = await parseSl(content.value);
+//   return pageData.slides.map((page) => {
+//     return {
+//       ...page,
+//       parsedContent: compileMarkdown(page.content),
+//     };
+//   });
+// });
 
 const next = () => {
   if (activePage.value < pages.value.length - 1) {
@@ -111,15 +124,6 @@ watch([ArrowLeft, ArrowRight], () => {
 
 on("prev", prev);
 on("next", prev);
-
-const mode = ref(0);
-
-const modes = [
-  resolveComponent("IconMode0"),
-  resolveComponent("IconMode1"),
-  resolveComponent("IconMode2"),
-  resolveComponent("IconMode3"),
-];
 </script>
 
 <template>
@@ -135,10 +139,10 @@ const modes = [
       class="py-5 px-4 border-gray-700 flex md:flex-col gap-8 transition"
       :class="
         [
-          'bg-gray-800 text-gray-500/50 border-r',
-          'bg-gray-800 text-gray-500/50 border-r',
-          'bg-transparent text-gray-500/50 md:fixed md:top-0 md:left-0 md:bottom-0 z-50',
-          'bg-transparent text-gray-500/50 md:fixed md:top-0 md:left-0 md:bottom-0 z-50',
+          'bg-gray-800 text-gray-500/70 border-r',
+          'bg-gray-800 text-gray-500/70 border-r',
+          'bg-transparent text-gray-500/70 md:fixed md:top-0 md:left-0 md:bottom-0 z-50',
+          'bg-transparent text-gray-500/70 md:fixed md:top-0 md:left-0 md:bottom-0 z-50',
         ][mode]
       "
     >
@@ -150,7 +154,7 @@ const modes = [
           <component
             :is="m"
             class="w-6 h-6"
-            :class="{ 'opacity-50': mode !== i }"
+            :class="{ 'opacity-70': mode !== i }"
           />
         </button>
       </div>

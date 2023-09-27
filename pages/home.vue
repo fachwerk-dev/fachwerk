@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import IconLeft from "~icons/ri/arrow-left-line";
 
-const { find } = useStrapi();
-const { data: documents, refresh } = await useAsyncData("document", () =>
+const { find, create } = useStrapi();
+const user = useStrapiUser();
+
+const { data: documents, refresh } = await useAsyncData("documents", () =>
   find("documents", {
-    populate: ["users_permissions_user"],
+    populate: ["user"],
+    sort: ["id:desc"],
   }).then((res) => parseStrapi(res))
 );
-useIntervalFn(refresh, 3000);
+useIntervalFn(refresh, 2000);
+
+const onCreate = async () => {
+  const { id } = await create("documents", {
+    content: "",
+    user: user.value?.id,
+  }).then((res) => parseStrapi(res));
+  await navigateTo({ path: "/" + id });
+};
 
 function timeAgo(isoTimestamp) {
   const timestamp = new Date(isoTimestamp).getTime();
@@ -36,9 +47,9 @@ function timeAgo(isoTimestamp) {
 </script>
 
 <template>
-  <div class="grid md:grid-cols-[auto_1fr] min-h-screen">
+  <div class="md:grid md:grid-cols-[auto_1fr] min-h-screen">
     <div
-      class="sticky md:block top-0 bg-gray-800 py-5 px-4 border-gray-700 flex md:flex-col gap-8 transition border-gray-700 border-b md:border-none"
+      class="sticky md:block top-0 bg-gray-800 py-5 px-4 flex md:flex-col gap-8 transition border-gray-700 border-b md:border-none"
     >
       <NuxtLink to="/" class="block">
         <IconLeft
@@ -46,13 +57,20 @@ function timeAgo(isoTimestamp) {
         />
       </NuxtLink>
     </div>
-    <!-- <div class="bg-gray-800 w-16 border-r border-gray-700"></div> -->
     <div class="p-6 md:px-16 md:py-12">
-      <h1 class="font-bold text-5xl md:text-6xl text-gray-800 tracking-tight">
-        ▦ Fachwerk
-      </h1>
+      <div class="flex gap-4 flex-col md:flex-row justify-between items-center">
+        <h1 class="font-bold text-5xl md:text-6xl text-gray-800 tracking-tight">
+          ▦ Fachwerk
+        </h1>
+        <button
+          @click="onCreate"
+          class="md:w-auto font-semibold text-center text-lg rounded bg-gray-300 hover:bg-gray-400 transition px-4 py-2"
+        >
+          Create new document
+        </button>
+      </div>
       <div class="h-8" />
-      <div class="grid md:grid-cols-3 gap-6">
+      <div v-if="documents" class="grid md:grid-cols-3 gap-6">
         <NuxtLink
           v-for="d in documents"
           :to="'/' + d.id"
@@ -61,11 +79,12 @@ function timeAgo(isoTimestamp) {
           <div
             class="px-5 py-4 bg-gray-800 font-mono whitespace-pre-wrap text-gray-300 overflow-y-hidden md:overflow-y-scroll"
           >
-            {{ d.body }}
+            {{ d.content }}
           </div>
           <div class="py-3 px-4 flex items-center gap-1 bg-white">
-            <div class="text-gray-600">
-              By {{ d.users_permissions_user.username }}, updated
+            <div class="text-gray-500">
+              <span class="font-semibold">{{ d.id }}</span> by
+              {{ d.user.username }}
               {{ timeAgo(d.updatedAt) }}
             </div>
           </div>
