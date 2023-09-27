@@ -13,11 +13,13 @@ const { data: documents, refresh } = await useAsyncData("documents", () =>
 useIntervalFn(refresh, 2000);
 
 const onCreate = async () => {
-  const { id } = await create("documents", {
-    content: "",
-    user: user.value?.id,
-  }).then((res) => parseStrapi(res));
-  await navigateTo({ path: "/" + id });
+  if (user.value) {
+    const { id } = await create("documents", {
+      content: "",
+      user: user.value?.id,
+    }).then((res) => parseStrapi(res));
+    await navigateTo({ path: "/" + id });
+  }
 };
 
 function timeAgo(isoTimestamp) {
@@ -87,7 +89,7 @@ function timeAgo(isoTimestamp) {
           <div class="py-3 px-4 flex items-center gap-1 bg-white">
             <div class="text-gray-500 flex justify-between w-full">
               <div class="font-semibold">{{ d.id }}</div>
-              <div>Updated {{ timeAgo(d.updatedAt) }}</div>
+              <div>{{ d.user?.username }} {{ timeAgo(d.updatedAt) }}</div>
             </div>
           </div>
         </NuxtLink>
