@@ -126,7 +126,7 @@ watch([ArrowLeft, ArrowRight], () => {
 });
 
 on("prev", prev);
-on("next", prev);
+on("next", next);
 </script>
 
 <template>
@@ -169,7 +169,7 @@ on("next", prev);
       v-model="content"
       @click="onTextarea"
     />
-    <div class="overflow-y-auto h-full">
+    <div class="overflow-y-auto h-full relative">
       <Page
         v-for="(page, i) in pages"
         :active="i === activePage"
@@ -189,6 +189,14 @@ on("next", prev);
           />
         </ClientOnly>
       </Page>
+      <div
+        @click="prev"
+        class="fixed top-16 md:top-0 left-0 md:left-16 bottom-0 w-12"
+      ></div>
+      <div
+        @click="next"
+        class="fixed top-16 md:top-0 right-0 bottom-0 w-12"
+      ></div>
     </div>
   </div>
 </template>
