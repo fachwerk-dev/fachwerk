@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  strapi: {
+    devtools: true,
+  },
   hooks: {
     "vite:extendConfig": (config, { isClient }) => {
       if (isClient) {

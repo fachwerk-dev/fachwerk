@@ -66,13 +66,7 @@ function timeAgo(isoTimestamp) {
         <h1 class="font-bold text-5xl md:text-6xl text-gray-800 tracking-tight">
           ▦ Fachwerk
         </h1>
-        <button
-          v-if="user"
-          @click="onCreate"
-          class="md:w-auto font-semibold text-center text-lg rounded bg-gray-300 hover:bg-gray-400 transition px-4 py-2"
-        >
-          Create new document
-        </button>
+        <Button v-if="user" @click="onCreate"> Create new document </Button>
       </div>
       <div class="h-8" />
       <div v-if="documents" class="grid md:grid-cols-3 gap-6">
