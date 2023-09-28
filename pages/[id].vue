@@ -83,24 +83,15 @@ watchDebounced(
   { debounce: 3000 }
 );
 const onTextarea = () => {
-  row.value = textarea.value.value
-    .substr(0, textarea.value.selectionStart)
-    .split(/\r?\n|\r/).length;
+  row.value =
+    textarea.value.value
+      .substr(0, textarea.value.selectionStart)
+      .split(/\r?\n|\r/).length - 1;
   const index = pages.value?.findIndex(
     (d) => d.start <= row.value && d.end >= row.value
   );
   activePage.value = index > -1 ? index : 0;
 };
-
-// const pages = computedAsync(async () => {
-//   const pageData = await parseSl(content.value);
-//   return pageData.slides.map((page) => {
-//     return {
-//       ...page,
-//       parsedContent: compileMarkdown(page.content),
-//     };
-//   });
-// });
 
 const next = () => {
   if (activePage.value < pages.value.length - 1) {
@@ -127,6 +118,46 @@ watch([ArrowLeft, ArrowRight], () => {
 
 on("prev", prev);
 on("next", next);
+
+// Image upload
+
+const client = useStrapiClient();
+const { data: files, refresh } = useAsyncData(
+  "file",
+  async () => await client("/upload/files")
+);
+const showImages = ref(false);
+
+const { files: uploadFiles, open, onChange: onUpload } = useFileDialog();
+
+onUpload(async () => {
+  const formData = new FormData();
+  [...(uploadFiles.value || [])].forEach((uploadFile) =>
+    formData.append("files", uploadFile)
+  );
+  await client(`/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  refresh();
+});
+
+const fruits = ["apple", "banana", "date"];
+
+// Insert 'cherry' and 'kiwi' at index 2, without removing any elements
+const a = [...fruits].splice(2, 0, "cherry", "kiwi");
+console.log(a);
+
+const onFileClick = (file: any) => {
+  focused.value = true;
+  let lines = content.value.split(/\r?\n/);
+  const newLine = `\n${file.formats.large.url}?name=${file.name.replace(
+    /\s+/g,
+    "+"
+  )}`;
+  lines.splice(row.value >= 0 ? row.value : lines.length, 0, newLine);
+  content.value = lines.join("\n");
+};
 </script>
 
 <template>
@@ -161,14 +192,30 @@ on("next", next);
           />
         </button>
       </div>
+      <button @click="showImages = !showImages" class="fixed bottom-5 left-5">
+        <IconImage class="text-gray-500 hover:text-gray-300 w-6 h-6" />
+      </button>
     </div>
-    <textarea
-      v-show="[0, 1].includes(mode)"
-      ref="textarea"
-      class="block w-full h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
-      v-model="content"
-      @click="onTextarea"
-    />
+    <div class="relative">
+      <textarea
+        v-show="[0, 1].includes(mode)"
+        ref="textarea"
+        class="absolute inset-0 block w-full h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
+        v-model="content"
+        @click="onTextarea"
+      />
+      <div
+        :class="showImages ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+        class="transition overflow-auto p-6 absolute top-0 right-0 bottom-0 bg-gray-800/90 w-[25vw] translate-x-[25vw] flex flex-col gap-6 z-10"
+      >
+        <Button class="md:w-full" type="button" @click="open">
+          Upload files
+        </Button>
+        <button v-for="file in [...files].reverse()" @click="onFileClick(file)">
+          <img :src="file.formats.large.url" />
+        </button>
+      </div>
+    </div>
     <div class="overflow-y-auto h-full relative">
       <Page
         v-for="(page, i) in pages"

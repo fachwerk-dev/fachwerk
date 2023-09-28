@@ -10,18 +10,15 @@ const content = ref(`
 
 Just lay back and enjoy
 `);
-const onFileClick = (file) => {
-  content.value = `${content.value}\n\n${file.formats.large.url}?name=${file.name}`;
-  showImages.value = false;
-};
+
 const markdownContent = computed(() => compileMarkdown(content.value));
 
-const { files: uploadableFiles, open, onChange } = useFileDialog();
+const { files: uploadFiles, open, onChange: onUpload } = useFileDialog();
 
-onChange(async () => {
+onUpload(async () => {
   const formData = new FormData();
-  [...uploadableFiles.value].forEach((uploadableFile) =>
-    formData.append("files", uploadableFile)
+  [...uploadFiles.value].forEach((uploadFile) =>
+    formData.append("files", uploadFile)
   );
   await client(`/upload`, {
     method: "POST",
@@ -29,6 +26,11 @@ onChange(async () => {
   });
   refresh();
 });
+
+const onFileClick = (file) => {
+  content.value = `${content.value}\n\n${file.formats.large.url}?name=${file.name}`;
+  showImages.value = false;
+};
 </script>
 
 <template>
@@ -45,7 +47,7 @@ onChange(async () => {
         <Button class="md:w-full" type="button" @click="open">
           Upload files
         </Button>
-        <button v-for="file in files" @click="onFileClick(file)">
+        <button v-for="file in [...files].reverse()" @click="onFileClick(file)">
           <img :src="file.formats.large.url" />
         </button>
       </div>
