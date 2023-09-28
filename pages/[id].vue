@@ -188,25 +188,28 @@ const onFileClick = (file: any) => {
           <component
             :is="m"
             class="w-6 h-6"
-            :class="{ 'opacity-70': mode !== i }"
+            :class="{ 'opacity-50': mode !== i }"
           />
         </button>
       </div>
-      <button @click="showImages = !showImages" class="fixed bottom-5 left-5">
+      <button
+        @click="showImages = !showImages"
+        class="hidden md:block fixed bottom-5 left-5"
+      >
         <IconImage class="text-gray-500 hover:text-gray-300 w-6 h-6" />
       </button>
     </div>
-    <div class="relative">
+    <div class="relative z-10">
       <textarea
         v-show="[0, 1].includes(mode)"
         ref="textarea"
-        class="absolute inset-0 block h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
+        class="w-full md:absolute inset-0 block h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
         v-model="content"
         @click="onTextarea"
       />
       <div
         :class="showImages ? 'opacity-100' : 'opacity-0 pointer-events-none'"
-        class="transition overflow-auto p-6 absolute top-0 right-0 bottom-0 bg-gray-800/90 w-[25vw] translate-x-[25vw] flex flex-col gap-6 z-10"
+        class="hidden md:flex transition overflow-auto p-6 absolute top-0 right-0 bottom-0 bg-gray-800/90 w-[25vw] translate-x-[25vw] flex-col gap-6"
       >
         <Button class="md:w-full" type="button" @click="open">
           {{ uploadTitles[uploadStatus] }}
@@ -224,7 +227,7 @@ const onFileClick = (file: any) => {
         </div>
       </div>
     </div>
-    <div class="overflow-y-auto h-full relative">
+    <div class="overflow-y-auto h-full">
       <Page
         v-for="(page, i) in pages"
         :active="i === activePage"
