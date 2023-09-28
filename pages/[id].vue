@@ -130,16 +130,21 @@ const showImages = ref(false);
 
 const { files: uploadFiles = [], open, onChange: onUpload } = useFileDialog();
 
+const uploadTitles = ["Add images", "Uploading..."];
+const uploadStatus = ref(0);
+
 onUpload(async () => {
+  uploadStatus.value = 1;
   const formData = new FormData();
   [...(uploadFiles.value || [])].forEach((uploadFile) =>
     formData.append("files", uploadFile)
   );
-  await client(`/upload`, {
+  const uploaded = await client(`/upload`, {
     method: "POST",
     body: formData,
   });
   refresh();
+  uploadStatus.value = 0;
 });
 
 const onFileClick = (file: any) => {
@@ -151,6 +156,7 @@ const onFileClick = (file: any) => {
   )}`;
   lines.splice(row.value >= 0 ? row.value : lines.length, 0, newLine);
   content.value = lines.join("\n");
+  showImages.value = false;
 };
 </script>
 
@@ -203,7 +209,7 @@ const onFileClick = (file: any) => {
         class="transition overflow-auto p-6 absolute top-0 right-0 bottom-0 bg-gray-800/90 w-[25vw] translate-x-[25vw] flex flex-col gap-6 z-10"
       >
         <Button class="md:w-full" type="button" @click="open">
-          Upload files
+          {{ uploadTitles[uploadStatus] }}
         </Button>
         <div class="grid grid-cols-2 gap-4">
           <button
