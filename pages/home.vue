@@ -73,7 +73,7 @@ function timeAgo(isoTimestamp) {
         <NuxtLink
           v-for="d in documents"
           :to="'/' + d.id"
-          class="aspect-[4/3] rounded shadow grid grid-rows-[1fr_auto] overflow-hidden"
+          class="aspect-square rounded shadow grid grid-rows-[1fr_auto] overflow-hidden"
         >
           <div
             class="px-5 py-4 bg-gray-800 font-mono whitespace-pre-wrap text-gray-300 overflow-y-hidden md:overflow-y-scroll"
