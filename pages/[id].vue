@@ -47,7 +47,19 @@ onMounted(() => {
 
 const content = ref(doc.value.content);
 
-const defaultClass = "p-5 prose max-w-none";
+const defaultClass = `p-5 
+  max-w-none
+  prose
+  prose-code:text-sm
+  prose-code:bg-gray-800
+  prose-code:rounded
+  prose-code:px-1
+  prose-code:py-px
+  prose-code:font-normal
+  prose-code:text-gray-200
+  prose-code:before:content-none
+  prose-code:after:content-none
+`;
 
 const pages = ref([]);
 watchDebounced(
@@ -258,9 +270,3 @@ const onFileClick = (file: any) => {
     </div>
   </div>
 </template>
-
-<style>
-.prose p:not(:has(img)) {
-  max-width: 60ch;
-}
-</style>

@@ -68,3 +68,9 @@ const onSubmit = async () => {
     </div>
   </div>
 </template>
+
+<style>
+.prose p:not(:has(img)) {
+  @apply max-w-[60ch];
+}
+</style>
