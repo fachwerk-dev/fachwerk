@@ -50,7 +50,7 @@ const content = ref(doc.value.content);
 const defaultClass = `p-5 
   max-w-none
   prose
-  prose-code:text-sm
+  prose-code:text-[90%]
   prose-code:bg-gray-800
   prose-code:rounded
   prose-code:px-1
