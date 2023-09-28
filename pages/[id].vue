@@ -128,7 +128,7 @@ const { data: files, refresh } = useAsyncData(
 );
 const showImages = ref(false);
 
-const { files: uploadFiles, open, onChange: onUpload } = useFileDialog();
+const { files: uploadFiles = [], open, onChange: onUpload } = useFileDialog();
 
 onUpload(async () => {
   const formData = new FormData();
@@ -142,16 +142,10 @@ onUpload(async () => {
   refresh();
 });
 
-const fruits = ["apple", "banana", "date"];
-
-// Insert 'cherry' and 'kiwi' at index 2, without removing any elements
-const a = [...fruits].splice(2, 0, "cherry", "kiwi");
-console.log(a);
-
 const onFileClick = (file: any) => {
   focused.value = true;
   let lines = content.value.split(/\r?\n/);
-  const newLine = `\n${file.formats.large.url}?name=${file.name.replace(
+  const newLine = `\n${file.formats?.large?.url}?name=${file.name.replace(
     /\s+/g,
     "+"
   )}`;
@@ -200,7 +194,7 @@ const onFileClick = (file: any) => {
       <textarea
         v-show="[0, 1].includes(mode)"
         ref="textarea"
-        class="absolute inset-0 block w-full h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
+        class="absolute inset-0 block h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
         v-model="content"
         @click="onTextarea"
       />
@@ -211,9 +205,17 @@ const onFileClick = (file: any) => {
         <Button class="md:w-full" type="button" @click="open">
           Upload files
         </Button>
-        <button v-for="file in [...files].reverse()" @click="onFileClick(file)">
-          <img :src="file.formats.large.url" />
-        </button>
+        <div class="grid grid-cols-2 gap-4">
+          <button
+            v-for="file in [...files].reverse()"
+            @click="onFileClick(file)"
+          >
+            <img
+              :src="file.formats?.large?.url"
+              class="aspect-square object-cover"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div class="overflow-y-auto h-full relative">
