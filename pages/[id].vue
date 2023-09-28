@@ -207,12 +207,12 @@ const onFileClick = (file: any) => {
         </Button>
         <div class="grid grid-cols-2 gap-4">
           <button
-            v-for="file in [...files].reverse()"
+            v-for="file in [...(files || [])].reverse()"
             @click="onFileClick(file)"
           >
             <img
               :src="file.formats?.large?.url"
-              class="aspect-square object-cover"
+              class="aspect-square object-cover rounded hover:ring-4 ring-gray-300"
             />
           </button>
         </div>
