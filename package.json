@@ -1,8 +1,8 @@
 {
   "name": "nuxt-app",
   "engines": {
-      "node": "16.x"
-   },
+    "node": "16.x"
+  },
   "private": true,
   "type": "module",
   "scripts": {
@@ -30,6 +30,7 @@
     "lodash-es": "^4.17.21",
     "markdown-it": "^13.0.1",
     "markdown-it-external-links": "^0.0.6",
+    "marked": "^9.0.3",
     "mitt": "^3.0.1",
     "unplugin-icons": "^0.17.0",
     "vue": "^3.3.4"
