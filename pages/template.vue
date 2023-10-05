@@ -21,27 +21,44 @@ b
 const pageSeparator = /\r?\n---\r?\n/g;
 const sectionSeparator = /\r?\n--\r?\n/g;
 
-const parseContent = (content, separator) => {
-  const a = content.replace(/^---/g, "").split(separator);
+const parseSection = (content) => {
+  const a = content.replace(/^--/g, "").split(sectionSeparator);
   let prev = null;
   let pages = [];
   a.forEach((c) => {
     if (prev?.includes(":")) {
       pages.push({
         frontmatter: prev,
-        content: parseContent(c, sectionSeparator),
+        content: c,
       });
     } else if (!c.includes(":")) {
       pages.push({ content: c });
     }
     prev = c;
   });
-  //.map((page) => page.split(sectionSeparator));
-
   return pages;
 };
+
+const parseContent = (content) => {
+  const a = content.replace(/^---/g, "").split(pageSeparator);
+  let prev = null;
+  let pages = [];
+  a.forEach((c) => {
+    if (prev?.includes(":")) {
+      pages.push({
+        frontmatter: prev,
+        content: parseSection(c),
+      });
+    } else if (!c.includes(":")) {
+      pages.push({ content: c });
+    }
+    prev = c;
+  });
+  return pages;
+};
+
 const parsedContent = computed(() => {
-  return parseContent(content.value, pageSeparator);
+  return parseContent(content.value);
 });
 </script>
 
