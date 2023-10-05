@@ -1,11 +1,19 @@
 <script setup>
+import { map } from "lodash-es";
+
 const range = (length) => Array.from({ length }).map((_, i) => i + 1);
 const g = (value) => `"g${value}"`;
 const fr = (value) => `1fr`;
 const auto = (value) => `auto`;
 const count = ref(3);
 const maxAreas = range(100);
-const areas = computed(() => maxAreas.slice(0, count.value));
+const areas = computed(() =>
+  count.value > 1 ? maxAreas.slice(0, count.value) : maxAreas.slice(0, 1)
+);
+const areasMinusOne = computed(() =>
+  count.value > 1 ? maxAreas.slice(0, count.value - 1) : maxAreas.slice(0, 1)
+);
+const activeTemplate = ref(3);
 const templates = computed(() => {
   return [
     {
@@ -36,9 +44,36 @@ const templates = computed(() => {
               .join(" ")
           : "g1",
     },
+    {
+      title: "Auto header, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "auto 1fr",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
+    {
+      title: "1/2 header, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "1fr 1fr",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
   ];
 });
-const activeTemplate = ref(1);
 </script>
 <template>
   <div class="grid grid-cols-[1fr_3fr]">
