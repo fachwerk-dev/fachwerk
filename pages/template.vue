@@ -1,4 +1,5 @@
 <script setup>
+import { parse } from "marked";
 const content = ref(`---
 code: a
 ---
@@ -12,11 +13,11 @@ code: 1
 code2: 2
 --
 
-a
+## Hello again
 
 ---
 
-b
+### And again
 `);
 
 const pageSeparator = /\r?\n---\r?\n/g;
@@ -24,21 +25,14 @@ const sectionSeparator = /\r?\n--\r?\n/g;
 const yamlSeparator = /--\s*[\s\S]*?:[\s\S]*?--/g;
 
 const parseSection = (content) => {
-  const a = content.replace(/^--/g, "").split(sectionSeparator);
+  const a = content.split(sectionSeparator);
   let prev = null;
   let pages = [];
   a.forEach((c) => {
-    if (prev?.includes(":")) {
-      pages.push({
-        frontmatter: prev,
-        content: c,
-      });
-    } else if (!c.includes(":")) {
-      pages.push({ content: c });
-    }
+    pages.push({ frontmatter: prev?.includes(":") ? prev : null, content: c });
     prev = c;
   });
-  return pages;
+  return pages.filter((p) => !p.content.includes(":"));
 };
 
 const parseContent = (content) => {
@@ -48,48 +42,16 @@ const parseContent = (content) => {
   a.forEach((c) => {
     if (prev?.replace(yamlSeparator, "").includes(":")) {
       pages.push({
-        frontmatter: prev,
-        content: c,
+        frontmatter: prev.includes(":") ? prev : null,
+        content: parseSection(c),
       });
-    } else if (!c.includes(":")) {
-      pages.push({ content: c });
+    } else {
+      pages.push({ content: parseSection(c) });
     }
     prev = c;
   });
-  return pages;
+  return pages.filter((p) => p.content.length > 0);
 };
-
-/*
-const splitContent = (content) => {
-  let c = [];
-  const a = content
-    .replace(/^---/g, "")
-    .split(pageSeparator)
-    .forEach((page) => {
-      const sections = page.split(sectionSeparator);
-      if (sections.length > 1) {
-        sections.forEach((section) => c.push({ level: 2, content: section }));
-      } else {
-        c.push({ level: 1, content: sections[0] });
-      }
-    });
-  return c;
-};
-
-const parseContent = (splitContent) => {
-  let prev = null;
-  let pages = [];
-  splitContent.forEach((c) => {
-    if (prev?.content.includes(":")) {
-      pages.push({ ...c, frontmatter: prev.content });
-    } else if (!c?.content.includes(":")) {
-      pages.push(c);
-    }
-    prev = c;
-  });
-  return pages;
-};
-*/
 
 const parsedContent = computed(() => {
   return parseContent(content.value);
@@ -97,12 +59,32 @@ const parsedContent = computed(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 fixed inset-0">
+  <div class="grid grid-cols-3 fixed inset-0">
     <textarea
       class="overflow-auto bg-gray-800 text-gray-200 font-mono p-5 outline-none"
       v-model="content"
     />
-    <div class="p-4 overflow-auto font-mono whitespace-pre-wrap">
+
+    <div class="flex flex-col gap-4 p-4">
+      <div
+        class="p-4 flex flex-col gap-4 bg-gray-100"
+        v-for="page in parsedContent"
+      >
+        <div
+          v-if="page.frontmatter"
+          class="font-mono text-sm whitespace-pre mb-2"
+        >
+          {{ page.frontmatter }}
+        </div>
+        <div class="border p-4 bg-gray-200" v-for="section in page.content">
+          <div class="font-mono text-sm whitespace-pre mb-2">
+            {{ section.frontmatter }}
+          </div>
+          <div class="prose" v-html="parse(section.content)" />
+        </div>
+      </div>
+    </div>
+    <div class="p-4 overflow-auto font-mono text-sm whitespace-pre-wrap">
       {{ parsedContent }}
     </div>
   </div>
