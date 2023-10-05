@@ -204,7 +204,7 @@ area: {{ templates[activeTemplate].area }}
       <div
         v-for="a in areas"
         contenteditable
-        class="p-4 bg-gray-300 text-2xl font-bold"
+        class="p-4 bg-gray-300 text-8xl font-bold"
         :style="{
           opacity: 0.5,
           gridArea: templates[activeTemplate].area || 'g' + a,
