@@ -21,6 +21,7 @@ b
 
 const pageSeparator = /\r?\n---\r?\n/g;
 const sectionSeparator = /\r?\n--\r?\n/g;
+const yamlSeparator = /--\s*[\s\S]*?:[\s\S]*?--/g;
 
 const parseSection = (content) => {
   const a = content.replace(/^--/g, "").split(sectionSeparator);
@@ -40,15 +41,12 @@ const parseSection = (content) => {
   return pages;
 };
 
-const cleanup = (content) =>
-  content?.replace(/---?\s*[\s\S]*?:[\s\S]*?---?/g, "");
-
 const parseContent = (content) => {
   const a = content.replace(/^---/g, "").split(pageSeparator);
   let prev = null;
   let pages = [];
   a.forEach((c) => {
-    if (cleanup(prev)?.includes(":")) {
+    if (prev?.replace(yamlSeparator, "").includes(":")) {
       pages.push({
         frontmatter: prev,
         content: c,
