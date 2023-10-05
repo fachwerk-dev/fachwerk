@@ -9,6 +9,7 @@ ahaa
 
 --
 code: 1
+code2: 2
 --
 
 a
@@ -39,15 +40,18 @@ const parseSection = (content) => {
   return pages;
 };
 
+const cleanup = (content) =>
+  content?.replace(/---?\s*[\s\S]*?:[\s\S]*?---?/g, "");
+
 const parseContent = (content) => {
   const a = content.replace(/^---/g, "").split(pageSeparator);
   let prev = null;
   let pages = [];
   a.forEach((c) => {
-    if (prev?.includes(":")) {
+    if (cleanup(prev)?.includes(":")) {
       pages.push({
         frontmatter: prev,
-        content: parseSection(c),
+        content: c,
       });
     } else if (!c.includes(":")) {
       pages.push({ content: c });
@@ -56,6 +60,38 @@ const parseContent = (content) => {
   });
   return pages;
 };
+
+/*
+const splitContent = (content) => {
+  let c = [];
+  const a = content
+    .replace(/^---/g, "")
+    .split(pageSeparator)
+    .forEach((page) => {
+      const sections = page.split(sectionSeparator);
+      if (sections.length > 1) {
+        sections.forEach((section) => c.push({ level: 2, content: section }));
+      } else {
+        c.push({ level: 1, content: sections[0] });
+      }
+    });
+  return c;
+};
+
+const parseContent = (splitContent) => {
+  let prev = null;
+  let pages = [];
+  splitContent.forEach((c) => {
+    if (prev?.content.includes(":")) {
+      pages.push({ ...c, frontmatter: prev.content });
+    } else if (!c?.content.includes(":")) {
+      pages.push(c);
+    }
+    prev = c;
+  });
+  return pages;
+};
+*/
 
 const parsedContent = computed(() => {
   return parseContent(content.value);
