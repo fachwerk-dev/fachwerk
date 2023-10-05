@@ -183,9 +183,15 @@ const templates = computed(() => {
         {{ t.title }}
       </div>
       <div class="font-bold mt-4">Style</div>
-      <pre class="whitespace-pre-wrap text-sm">{{
-        templates[activeTemplate]
-      }}</pre>
+      <pre class="whitespace-pre-wrap text-sm">
+cols: {{ templates[activeTemplate].cols }}
+
+rows: {{ templates[activeTemplate].rows }}
+
+areas: {{ templates[activeTemplate].areas }}
+
+area: {{ templates[activeTemplate].area }}
+      </pre>
     </div>
     <div
       class="p-4 grid gap-4 h-screen mix-blend-multiply"
