@@ -13,9 +13,38 @@ const areas = computed(() =>
 const areasMinusOne = computed(() =>
   count.value > 1 ? maxAreas.slice(0, count.value - 1) : maxAreas.slice(0, 1)
 );
-const activeTemplate = ref(3);
+const areasHalf = computed(() =>
+  count.value > 1
+    ? maxAreas.slice(0, Math.round(count.value / 2))
+    : maxAreas.slice(0, 1)
+);
+const activeTemplate = ref(0);
 const templates = computed(() => {
   return [
+    {
+      title: "1/2 rows",
+      cols: areasHalf.value.map(fr).join(" "),
+      rows: "1fr 1fr",
+      area: " ",
+    },
+    {
+      title: "Top auto row",
+      cols: areasHalf.value.map(fr).join(" "),
+      rows: "auto 1fr",
+      area: " ",
+    },
+    {
+      title: "Bottom auto row",
+      cols: areasHalf.value.map(fr).join(" "),
+      rows: "1fr auto",
+      area: " ",
+    },
+    {
+      title: "Two 1/2 cols",
+      cols: "1fr 1fr",
+      rows: areasHalf.value.map(fr).join(" "),
+      area: " ",
+    },
     {
       title: "Default",
       cols: "1fr",
@@ -23,15 +52,11 @@ const templates = computed(() => {
       areas: areas.value.map(g).join(" "),
     },
     {
-      title: "1/2 left, others right in row",
-      cols: "1fr 1fr",
-      areas:
-        areas.value.length > 1
-          ? areas.value
-              .slice(0, areas.value.length - 1)
-              .map((a) => `"g1 g${a + 1}"`)
-              .join(" ")
-          : "g1",
+      title: "Overlay",
+      cols: "1fr",
+      rows: "minmax(0, 1fr)",
+      areas: "g1",
+      area: "g1",
     },
     {
       title: "1/3 left, others right in row",
@@ -45,9 +70,35 @@ const templates = computed(() => {
           : "g1",
     },
     {
+      title: "1/2 left, others right in row",
+      cols: "1fr 1fr",
+      areas:
+        areas.value.length > 1
+          ? areas.value
+              .slice(0, areas.value.length - 1)
+              .map((a) => `"g1 g${a + 1}"`)
+              .join(" ")
+          : "g1",
+    },
+
+    {
       title: "Auto header, others in cols",
       cols: areasMinusOne.value.map(fr).join(" "),
       rows: "auto 1fr",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
+    {
+      title: "1/3 header, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "1fr 2fr",
       areas:
         areas.value.length > 1
           ? [
@@ -80,6 +131,7 @@ const templates = computed(() => {
     <div class="p-4 flex flex-col gap-3">
       Number of colums: {{ count }}
       <input type="range" v-model="count" min="1" max="10" />
+      <div class="font-bold">Layouts</div>
       <div
         class="cursor-pointer hover:opacity-70 underline underline-offset-2"
         v-for="(t, i) in templates"
@@ -90,7 +142,7 @@ const templates = computed(() => {
       <pre class="whitespace-pre-wrap">{{ templates[activeTemplate] }}</pre>
     </div>
     <div
-      class="p-4 grid gap-4 h-screen"
+      class="p-4 grid gap-4 h-screen mix-blend-multiply"
       :style="{
         gridTemplateAreas: templates[activeTemplate].areas,
         gridTemplateColumns: templates[activeTemplate].cols,
@@ -100,12 +152,13 @@ const templates = computed(() => {
       <div
         v-for="a in areas"
         contenteditable
-        class="p-4 bg-gray-300"
+        class="p-4 bg-gray-300 text-3xl font-bold"
         :style="{
-          gridArea: 'g' + a,
+          opacity: 0.5,
+          gridArea: templates[activeTemplate].area || 'g' + a,
         }"
       >
-        g{{ a }}
+        {{ "g" + a }}
       </div>
     </div>
   </div>
