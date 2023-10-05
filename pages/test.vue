@@ -22,34 +22,11 @@ const activeTemplate = ref(0);
 const templates = computed(() => {
   return [
     {
-      title: "1/2 rows",
-      cols: areasHalf.value.map(fr).join(" "),
-      rows: "1fr 1fr",
-      area: " ",
-    },
-    {
-      title: "Top auto row",
-      cols: areasHalf.value.map(fr).join(" "),
-      rows: "auto 1fr",
-      area: " ",
-    },
-    {
-      title: "Bottom auto row",
-      cols: areasHalf.value.map(fr).join(" "),
-      rows: "1fr auto",
-      area: " ",
-    },
-    {
-      title: "Two 1/2 cols",
-      cols: "1fr 1fr",
-      rows: areasHalf.value.map(fr).join(" "),
-      area: " ",
-    },
-    {
       title: "Default",
       cols: "1fr",
       rows: areas.value.map(auto).join(" "),
       areas: areas.value.map(g).join(" "),
+      area: undefined,
     },
     {
       title: "Overlay",
@@ -58,6 +35,30 @@ const templates = computed(() => {
       areas: "g1",
       area: "g1",
     },
+    // {
+    //   title: "1/2 rows",
+    //   cols: areasHalf.value.map(fr).join(" "),
+    //   rows: "1fr 1fr",
+    //   areas: areasHalf.value.map((a) => `a${a}`).join(" "),
+    // },
+    // {
+    //   title: "Top auto row",
+    //   cols: areasHalf.value.map(fr).join(" "),
+    //   rows: "auto 1fr",
+    //   area: " ",
+    // },
+    // {
+    //   title: "Bottom auto row",
+    //   cols: areasHalf.value.map(fr).join(" "),
+    //   rows: "1fr auto",
+    //   area: " ",
+    // },
+    // {
+    //   title: "Two 1/2 cols",
+    //   cols: "1fr 1fr",
+    //   rows: areasHalf.value.map(fr).join(" "),
+    //   area: " ",
+    // },
     {
       title: "1/3 left, others right in row",
       cols: "1fr 2fr",
@@ -80,7 +81,6 @@ const templates = computed(() => {
               .join(" ")
           : "g1",
     },
-
     {
       title: "Auto header, others in cols",
       cols: areasMinusOne.value.map(fr).join(" "),
@@ -123,6 +123,48 @@ const templates = computed(() => {
               .join(" ")
           : "g1",
     },
+    {
+      title: "Auto footer, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "1fr auto",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
+    {
+      title: "1/3 footer, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "2fr 1fr",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
+    {
+      title: "1/2 footer, others in cols",
+      cols: areasMinusOne.value.map(fr).join(" "),
+      rows: "1fr 1fr",
+      areas:
+        areas.value.length > 1
+          ? [
+              areasMinusOne.value.map((a) => `g${a + 1}`).join(" "),
+              areasMinusOne.value.map((_) => `g1`).join(" "),
+            ]
+              .map((row) => `"${row}"`)
+              .join(" ")
+          : "g1",
+    },
   ];
 });
 </script>
@@ -131,15 +173,19 @@ const templates = computed(() => {
     <div class="p-4 flex flex-col gap-3">
       Number of colums: {{ count }}
       <input type="range" v-model="count" min="1" max="10" />
-      <div class="font-bold">Layouts</div>
+      <div class="font-bold mt-4">Layouts</div>
       <div
-        class="cursor-pointer hover:opacity-70 underline underline-offset-2"
+        class="cursor-pointer hover:opacity-70 underline-offset-2"
+        :class="activeTemplate === i ? 'text-blue-700' : ''"
         v-for="(t, i) in templates"
         @click="activeTemplate = i"
       >
         {{ t.title }}
       </div>
-      <pre class="whitespace-pre-wrap">{{ templates[activeTemplate] }}</pre>
+      <div class="font-bold mt-4">Style</div>
+      <pre class="whitespace-pre-wrap text-sm">{{
+        templates[activeTemplate]
+      }}</pre>
     </div>
     <div
       class="p-4 grid gap-4 h-screen mix-blend-multiply"
@@ -152,7 +198,7 @@ const templates = computed(() => {
       <div
         v-for="a in areas"
         contenteditable
-        class="p-4 bg-gray-300 text-3xl font-bold"
+        class="p-4 bg-gray-300 text-2xl font-bold"
         :style="{
           opacity: 0.5,
           gridArea: templates[activeTemplate].area || 'g' + a,
