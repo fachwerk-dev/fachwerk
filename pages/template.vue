@@ -29,7 +29,18 @@ const parseSection = (content) => {
   let prev = null;
   let pages = [];
   a.forEach((c) => {
-    pages.push({ frontmatter: prev?.includes(":") ? prev : null, content: c });
+    const lines = c.split(/\r?\n/g).length;
+    const prevLines = prev?.trim().split(/\r?\n/g).length;
+    if (prev?.includes(":")) {
+      pages.push({
+        frontmatter: prev,
+        frontmatterLines: prevLines,
+        content: c,
+        contentLines: lines,
+      });
+    } else {
+      pages.push({ content: c, contentLines: lines });
+    }
     prev = c;
   });
   return pages.filter((p) => !p.content.includes(":"));
@@ -40,9 +51,12 @@ const parseContent = (content) => {
   let prev = null;
   let pages = [];
   a.forEach((c) => {
+    const prevLines = prev?.trim().split(/\r?\n/g).length;
+
     if (prev?.replace(yamlSeparator, "").includes(":")) {
       pages.push({
         frontmatter: prev.includes(":") ? prev : null,
+        frontmatterLines: prevLines,
         content: parseSection(c),
       });
     } else {
