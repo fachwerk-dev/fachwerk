@@ -1,7 +1,7 @@
 import MarkdownIt from "markdown-it";
 import MarkdownItExternalLinks from "markdown-it-external-links";
 
-function convertImageUrlsToMarkdown(text: string) {
+export function convertImageUrlsToMarkdown(text: string) {
   // Regular expression to match image URLs (supports common image file extensions).
   const imageUrlRegex =
     /(https?:\/\/[^\s]+(\.png|\.jpg|\.jpeg|\.gif|\.bmp|\.svg))/gi;
