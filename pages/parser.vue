@@ -23,7 +23,7 @@ const content = ref(
 code: a
 ---
 
-# Hello world
+# Two columns
 
 Split the columns with **--** or **-**. Give feedback which works best.
 
@@ -33,7 +33,7 @@ https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b924126618617
 
 ---
 
-# Another example
+# Three columns
 
 --
 
@@ -45,7 +45,7 @@ https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b924126618617
 
 ---
 
-# Another example 
+# No columns
 
 Here are text and image without splitting
 
