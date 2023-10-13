@@ -19,11 +19,7 @@ const renderer = {
 marked.use({ renderer });
 
 const content = ref(
-  `---
-code: a
----
-
-# Two columns
+  `# Two columns
 
 Split the columns with **--** or **-**. Give feedback which works best.
 
