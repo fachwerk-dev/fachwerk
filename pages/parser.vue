@@ -19,7 +19,23 @@ const renderer = {
 marked.use({ renderer });
 
 const content = ref(
-  `# Two columns
+  `
+1
+--
+2
+--
+3
+--
+4
+--
+5
+--
+6
+--
+7
+---
+
+# Two columns
 
 Split the columns with **--** or **-**. Give feedback which works best.
 
@@ -72,7 +88,7 @@ https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b924126618617
 const parse = async (content) => {
   const { slides: pages } = await parseContent(content);
   const pagesWithSections = pages.map((page) => {
-    const sections = page.content.split(/\n--?\n/g).map((section) => {
+    const sections = page.content.split(/\n--\n/g).map((section) => {
       const content = marked(convertImageUrlsToMarkdown(section));
       return {
         content,
@@ -90,14 +106,18 @@ const parse = async (content) => {
 
 const pageClass = (page) => {
   const baseClasses =
-    "grid prose max-w-none prose-p:mt-0 prose-img:object-cover last:prose-img:m-0 prose-img:w-full prose-img:aspect-square first:prose-headings:m-0 first:prose-headings:mb-2 border-b-2 border-gray-200";
+    "[&>*]:overflow-hidden aspect-video grid prose max-w-none prose-p:mt-0 prose-img:object-cover last:prose-img:m-0 prose-img:w-full prose-img:h-full first:prose-headings:m-0 first:prose-headings:mb-2 border-b-2 border-gray-200";
   const classes = {
     1: "",
     2: "grid-cols-2",
-    3: "grid-cols-3",
+    3: "md:grid-cols-3",
     4: "grid-cols-2 grid-rows-2",
-    5: "grid-cols-5",
-    6: "grid-cols-3 grid-rows-3",
+    5: "grid-cols-2 first:[&>*]:col-span-2 grid-rows-3",
+    6: "md:grid-cols-2 md:grid-rows-3 md:grid-cols-3 md:grid-rows-2",
+    7: "grid-cols-2 md:grid-cols-3 first:[&>*]:col-span-2 md:first:[&>*]:col-span-3 grid-rows-4 md:grid-rows-3",
+    8: "grid-cols-4 grid-rows-4",
+    9: "grid-cols-3 grid-rows-3",
+    10: "grid-cols-2 grid-rows-5 md:grid-cols-5 md:grid-rows-2",
   };
   return twMerge(baseClasses, classes[page.sections.length]);
 };
