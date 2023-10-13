@@ -11,22 +11,21 @@ function isImage(text) {
 const renderer = {
   paragraph(text) {
     if (text.startsWith("<img")) {
-      return text + "\n";
+      return text;
     }
     return `<p>${text}</p>`;
   },
 };
 marked.use({ renderer });
 
-const content = ref(`---
+const content = ref(
+  `---
 code: a
 ---
 
 # Hello world
 
---
-
-a
+Split the columns with **--** or **-**. Give feedback which works best.
 
 --
 
@@ -34,13 +33,50 @@ https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b924126618617
 
 ---
 
-### And again
-`);
+# Another example
+
+--
+
+Here we split the column into 3:
+
+--
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+---
+
+# Another example 
+
+Here are text and image without splitting
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+And below are 4 images:
+
+---
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+--
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+--
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+--
+
+https://fachwerk.fra1.cdn.digitaloceanspaces.com/8848408db64211fb29b9241266186170.png
+
+
+`
+);
 
 const parse = async (content) => {
   const { slides: pages } = await parseContent(content);
   const pagesWithSections = pages.map((page) => {
-    const sections = page.content.split(/\n--\n/g).map((section) => {
+    const sections = page.content.split(/\n--?\n/g).map((section) => {
       const content = marked(convertImageUrlsToMarkdown(section));
       return {
         content,
@@ -57,21 +93,22 @@ const parse = async (content) => {
 };
 
 const pageClass = (page) => {
-  const baseClasses = "grid";
+  const baseClasses =
+    "grid prose max-w-none prose-p:mt-0 prose-img:object-cover last:prose-img:m-0 prose-img:w-full prose-img:aspect-square first:prose-headings:m-0 first:prose-headings:mb-2 border-b-2 border-gray-200";
   const classes = {
-    1: "grid",
-    2: "grid grid-cols-2",
-    3: "grid grid-cols-3",
-    4: "grid grid-cols-4",
+    1: "",
+    2: "grid-cols-2",
+    3: "grid-cols-3",
+    4: "grid-cols-2 grid-rows-2",
+    5: "grid-cols-5",
+    6: "grid-cols-3 grid-rows-3",
   };
-  return {
-    class: twMerge(baseClasses, classes[page.sections.length]),
-  };
+  return twMerge(baseClasses, classes[page.sections.length]);
 };
 
 const sectionClass = (section) => {
   if (section.type === "image") {
-    return "block object-cover w-full h-full";
+    return "";
   }
   return "p-4";
 };
@@ -98,9 +135,17 @@ const pages = computedAsync(async () => {
       class="hidden md:block overflow-auto bg-gray-800 text-gray-200 font-mono p-5 outline-none"
       v-model="content"
     />
-    <div class="font-mono whitespace-pre p-4 overflow-auto">
-      <div class="grid"></div>
-      {{ pages }}
+    <div class="overflow-auto">
+      <div v-for="page in pages" :class="page.class">
+        <div
+          v-for="section in page.sections"
+          :class="section.class"
+          v-html="section.content"
+        />
+      </div>
+      <div class="font-mono whitespace-pre-wrap text-gray-400 p-4">
+        {{ pages }}
+      </div>
     </div>
   </div>
 </template>

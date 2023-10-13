@@ -66,7 +66,7 @@ const slides = computedAsync(async () => {
 </template>
 
 <style>
-p,
+/* p,
 img {
   margin: 0 !important;
 }
@@ -78,5 +78,5 @@ img {
   object-fit: cover;
   position: absolute;
   inset: 0;
-}
+} */
 </style>
