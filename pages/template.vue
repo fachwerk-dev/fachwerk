@@ -1,23 +1,5 @@
 <script setup>
-const content = ref(`---
-code: a
----
-
-# Hello world
-
-ahaa
-
---
-code: 1
-code2: 2
---
-
-## Hello again
-
----
-
-### And again
-`);
+const content = ref(`# Hello world`);
 </script>
 
 <template>
