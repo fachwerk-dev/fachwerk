@@ -1,5 +1,6 @@
 import MarkdownIt from "markdown-it";
 import MarkdownItExternalLinks from "markdown-it-external-links";
+import { default as dompurify } from "dompurify";
 
 export function convertImageUrlsToMarkdown(text: string) {
   // Regular expression to match image URLs (supports common image file extensions).
@@ -20,5 +21,5 @@ export function compileMarkdown(source: string) {
       externalTarget: "_blank",
     }
   );
-  return repairTemplate(md.render(convertImageUrlsToMarkdown(source)));
+  return dompurify.sanitize(md.render(convertImageUrlsToMarkdown(source)));
 }

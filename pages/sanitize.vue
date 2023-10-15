@@ -4,17 +4,26 @@ const { sanitize } = dompurify;
 const content = ref(`
 <input :class="{data.a}" />
 <input v-model="data.b" />
+<input @click="go" />
+<input v-on:click="go" />
 `);
 
 function preSanitize(content) {
-  const regex = /\s:([a-zA-Z]+)="/gm;
+  const regex = /\s:([a-zA-Z-_\.:]+)="/gm;
   const subst = ` data-v-bind:$1="`;
-
-  const regex2 = /\sv-([a-zA-Z]+)/gm;
-  const subst2 = ` data-v-$1`;
-  return content.replace(regex, subst).replace(regex2, subst2);
+  const regex2 = /\s@([a-zA-Z-_\.:]+)="/gm;
+  const subst2 = ` data-v-on:$1="`;
+  const regex3 = /\sv-([a-zA-Z-_\.:]+)/gm;
+  const subst3 = ` data-v-$1`;
+  return content
+    .replace(regex, subst)
+    .replace(regex2, subst2)
+    .replace(regex3, subst3);
 }
-// , { ADD_ATTR: ["v-model", "v-bind", "v-show", "v-if"],}
+
+const postSanitize = (content) => {
+  return content.replace(/data-v-/g, "v-");
+};
 </script>
 
 <template>
@@ -24,7 +33,7 @@ function preSanitize(content) {
       v-model="content"
     />
     <div class="font-mono whitespace-pre p-4">
-      {{ sanitize(preSanitize(content)) }}
+      {{ postSanitize(sanitize(preSanitize(content))) }}
     </div>
   </div>
 </template>

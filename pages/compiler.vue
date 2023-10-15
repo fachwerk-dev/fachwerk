@@ -1,11 +1,11 @@
 <script setup>
 const content = ref(`
-# Hello world
-
-<div class="grid"</div>
+# Hello
 `);
 const pages = computed(() => content.value.split(/\n---\n/g));
-const onErrors = (e) => console.log("EE", errors);
+useScriptTag("https://cdn.tailwindcss.com", () => {
+  window.tailwind.config = config;
+});
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const onErrors = (e) => console.log("EE", errors);
     />
     <div>
       <div class="prose p-4 border-b-2" v-for="page in pages">
-        <Compiler @errors="onErrors" :source="compileMarkdown(page)" />
+        <Compiler :source="compileMarkdown(page)" />
       </div>
     </div>
   </div>

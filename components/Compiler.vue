@@ -6,7 +6,7 @@ const data = reactive({});
 
 export default {
   props: ["source"],
-  setup(props: any) {
+  setup(props: any, { emit }) {
     const compiledSource = shallowRef<ComponentOptions | null>(null);
     watch(
       () => props.source,
@@ -22,7 +22,7 @@ export default {
       { immediate: true }
     );
 
-    return () => (compiledSource.value ? h(compiledSource.value) : h());
+    return () => (compiledSource.value ? h(compiledSource.value) : null);
   },
 };
 </script>
