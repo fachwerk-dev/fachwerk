@@ -15,8 +15,13 @@ export function compileTemplate(source = "") {
   let code: RenderFunction | undefined = undefined;
   try {
     const compiledCode = compile(source, {
+      onWarn: (err: any) => {
+        errors.push(err);
+        return false;
+      },
       onError: (err: any) => {
         errors.push(err);
+        return false;
       },
     });
     code = compiledCode || (() => null);
