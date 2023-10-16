@@ -61,6 +61,14 @@ const defaultClass = `p-5
   prose-code:text-gray-200
   prose-code:before:content-none
   prose-code:after:content-none
+  prose-code:whitespace-nowrap
+  [&>*]:overflow-hidden
+  prose-img:object-cover
+  last:prose-img:m-0
+  prose-img:w-full
+  prose-img:h-full
+  first:prose-headings:m-0
+  first:prose-headings:mb-2
 `;
 
 const pages = ref([]);
@@ -73,7 +81,6 @@ watchDebounced(
         const sections = page.content
           .split(/\r?\n--\r?\n/g)
           .map(compileMarkdown);
-        console.log(page.content);
         return {
           ...page,
           sections,
