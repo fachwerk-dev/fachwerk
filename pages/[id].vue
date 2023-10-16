@@ -48,7 +48,7 @@ onMounted(() => {
 
 const content = ref(doc.value.content);
 
-const defaultClass = `p-5
+const defaultClass = `
   max-w-none
   prose
   prose-p:mt-0
@@ -71,6 +71,11 @@ const defaultClass = `p-5
   first:prose-headings:mb-2
 `;
 
+function isImage(text: string) {
+  const regex = /^<img [^>]+>$/i;
+  return regex.test(text.trim());
+}
+
 const pages = ref([]);
 watchDebounced(
   content,
@@ -80,7 +85,11 @@ watchDebounced(
       pages.value = parsedPages.slides.map((page) => {
         const sections = page.content
           .split(/\r?\n--\r?\n/g)
-          .map(compileMarkdown);
+          .map(compileMarkdown)
+          .map((content) => ({
+            content,
+            type: isImage(content) ? "image" : "text",
+          }));
         return {
           ...page,
           sections,
@@ -183,14 +192,24 @@ const onFileClick = (file: any) => {
   showImages.value = false;
 };
 
-const modeClasses = [
+const _modeClasses = [
   "text-[110%] md:text-[100%] p-8",
   "text-[120%] p-12 min-h-screen",
   "text-[110%] md:text-[130%] p-8 md:py-16 md:px-64 w-screen",
   "text-[120%] md:text-[160%] p-10 md:px-32 md:py-24 w-screen min-h-screen",
 ];
 
+const modeClasses = [
+  "text-[110%] md:text-[100%]",
+  "text-[120%] min-h-screen",
+  "text-[110%] md:text-[130%] w-screen",
+  "text-[120%] md:text-[160%] w-screen min-h-screen",
+];
+
+const sectionClasses = ["p-8", "p-12", "p-20", "p-20"];
+
 const modeClass = computed(() => modeClasses[mode.value]);
+const sectionClass = computed(() => sectionClasses[mode.value]);
 </script>
 
 <template>
@@ -267,8 +286,11 @@ const modeClass = computed(() => modeClasses[mode.value]);
         :hide="[1, 3].includes(mode)"
       >
         <div :class="twMerge(defaultClass, modeClass, page.frontmatter.class)">
-          <div v-for="section in page.sections">
-            <Compiler :source="section" />
+          <div
+            v-for="section in page.sections"
+            :class="section.type === 'image' ? '' : sectionClass"
+          >
+            <Compiler :source="section.content" />
           </div>
         </div>
       </Page>
