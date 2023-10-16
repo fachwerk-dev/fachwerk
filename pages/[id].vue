@@ -192,16 +192,9 @@ const onFileClick = (file: any) => {
   showImages.value = false;
 };
 
-const _modeClasses = [
-  "text-[110%] md:text-[100%] p-8",
-  "text-[120%] p-12 min-h-screen",
-  "text-[110%] md:text-[130%] p-8 md:py-16 md:px-64 w-screen",
-  "text-[120%] md:text-[160%] p-10 md:px-32 md:py-24 w-screen min-h-screen",
-];
-
 const modeClasses = [
   "text-[110%] md:text-[100%]",
-  "text-[120%] min-h-screen",
+  "text-[75%] aspect-video",
   "text-[110%] md:text-[130%] w-screen",
   "text-[120%] md:text-[160%] w-screen min-h-screen",
 ];
@@ -210,6 +203,23 @@ const sectionClasses = ["p-8", "p-12", "p-20", "p-20"];
 
 const modeClass = computed(() => modeClasses[mode.value]);
 const sectionClass = computed(() => sectionClasses[mode.value]);
+
+const pageClass = (length: number) => {
+  const baseClasses = "grid";
+  const classes = {
+    1: "",
+    2: "grid-cols-2",
+    3: "grid-cols-3",
+    4: "grid-cols-4",
+    5: "grid-cols-5",
+    6: "grid-cols-4 grid-rows-3",
+    7: "grid-cols-7",
+    8: "grid-cols-4 grid-rows-4",
+    9: "grid-cols-3 grid-rows-3",
+    10: "grid-cols-2 grid-rows-5",
+  };
+  return twMerge(baseClasses, classes[length]);
+};
 </script>
 
 <template>
@@ -285,7 +295,16 @@ const sectionClass = computed(() => sectionClasses[mode.value]);
         :active="i === activePage"
         :hide="[1, 3].includes(mode)"
       >
-        <div :class="twMerge(defaultClass, modeClass, page.frontmatter.class)">
+        <div
+          :class="
+            twMerge(
+              defaultClass,
+              modeClass,
+              page.frontmatter.class,
+              pageClass(page.sections.length)
+            )
+          "
+        >
           <div
             v-for="section in page.sections"
             :class="section.type === 'image' ? '' : sectionClass"
