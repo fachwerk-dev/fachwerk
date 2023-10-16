@@ -6,6 +6,7 @@ declare global {
 }
 
 import { parse as parseSlides } from "@slidev/parser";
+import { twMerge } from "tailwind-merge";
 
 import IconLeft from "~icons/ri/arrow-left-line";
 
@@ -47,9 +48,10 @@ onMounted(() => {
 
 const content = ref(doc.value.content);
 
-const defaultClass = `p-5 
+const defaultClass = `p-5
   max-w-none
   prose
+  prose-p:mt-0
   prose-code:text-[90%]
   prose-code:bg-gray-800
   prose-code:rounded
@@ -68,10 +70,13 @@ watchDebounced(
     try {
       const parsedPages = await parseSlides(c);
       pages.value = parsedPages.slides.map((page) => {
-        const parsedContent = compileMarkdown(page.content);
+        const sections = page.content
+          .split(/\r?\n--\r?\n/g)
+          .map(compileMarkdown);
+        console.log(page.content);
         return {
           ...page,
-          parsedContent: `<div class="${defaultClass} ${page.frontmatter.class}">${parsedContent}</div>`,
+          sections,
         };
       });
     } catch (e) {
@@ -170,6 +175,15 @@ const onFileClick = (file: any) => {
   content.value = lines.join("\n");
   showImages.value = false;
 };
+
+const modeClasses = [
+  "text-[110%] md:text-[100%] p-8",
+  "text-[120%] p-12 min-h-screen",
+  "text-[110%] md:text-[130%] p-8 md:py-16 md:px-64 w-screen",
+  "text-[120%] md:text-[160%] p-10 md:px-32 md:py-24 w-screen min-h-screen",
+];
+
+const modeClass = computed(() => modeClasses[mode.value]);
 </script>
 
 <template>
@@ -245,19 +259,11 @@ const onFileClick = (file: any) => {
         :active="i === activePage"
         :hide="[1, 3].includes(mode)"
       >
-        <ClientOnly>
-          <Compiler
-            :source="page.parsedContent"
-            :class="
-              [
-                'text-[110%] md:text-[100%] p-8',
-                'text-[120%] p-12 min-h-screen',
-                'text-[110%] md:text-[130%] p-8 md:py-16 md:px-64 w-screen',
-                'text-[120%] md:text-[160%] p-10 md:px-32 md:py-24 w-screen min-h-screen',
-              ][mode]
-            "
-          />
-        </ClientOnly>
+        <div :class="twMerge(defaultClass, modeClass, page.frontmatter.class)">
+          <div v-for="section in page.sections">
+            <Compiler :source="section" />
+          </div>
+        </div>
       </Page>
       <div
         @click="prev"
