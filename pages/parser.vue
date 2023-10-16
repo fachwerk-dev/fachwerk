@@ -89,7 +89,7 @@ const parse = async (content) => {
   const { slides: pages } = await parseContent(content);
   const pagesWithSections = pages.map((page) => {
     const sections = page.content.split(/\n--\n/g).map((section) => {
-      const content = marked(convertImageUrlsToMarkdown(section));
+      const content = compileMarkdown(section);
       return {
         content,
         raw: section,

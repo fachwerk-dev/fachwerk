@@ -30,8 +30,6 @@
     "@types/markdown-it-external-links": "^0.0.0",
     "dompurify": "^3.0.6",
     "lodash-es": "^4.17.21",
-    "markdown-it": "^13.0.1",
-    "markdown-it-external-links": "^0.0.6",
     "marked": "^9.0.3",
     "mitt": "^3.0.1",
     "tailwind-merge": "^1.14.0",
