@@ -15,6 +15,7 @@ import config from "../tailwind.config";
 useScriptTag("https://cdn.tailwindcss.com", () => {
   window.tailwind.config = config;
 });
+import "katex/dist/katex.min.css";
 
 const route = useRoute();
 const { findOne, update } = useStrapi();
@@ -61,7 +62,6 @@ const defaultClass = `
   prose-code:text-gray-200
   prose-code:before:content-none
   prose-code:after:content-none
-  prose-code:whitespace-nowrap
   prose-img:object-cover
   last:prose-img:m-0
   prose-img:w-full

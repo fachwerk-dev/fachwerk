@@ -1,6 +1,6 @@
 import { marked } from "marked";
-import { default as dompurify } from "dompurify";
-const { sanitize } = dompurify;
+import { sanitize } from "isomorphic-dompurify";
+import markedKatex from "marked-katex-extension";
 
 function preSanitize(content: string) {
   const regex = /\s:([a-zA-Z-_\.:]+)="/gm;
@@ -54,7 +54,9 @@ const renderer = {
     return `<p>${text}</p>`;
   },
 };
+
 marked.use({ renderer });
+marked.use(markedKatex({ output: "html", throwOnError: false }));
 
 export function cleanUrl(href: string) {
   try {
