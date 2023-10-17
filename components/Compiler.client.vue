@@ -1,12 +1,17 @@
 <script lang="ts">
-import { reactive, h, ComponentOptions, watch, shallowRef } from "vue";
-import { emit, on } from "~/composables/events";
+import { h, ComponentOptions, watch, shallowRef } from "vue";
 
-const data = reactive({});
+const modules = import.meta.glob("../lib/*.js", { eager: true });
+const functions: any = Object.values(modules).reduce(
+  (acc: any, module: any) => {
+    return { ...acc, ...module };
+  },
+  {}
+);
 
 export default {
   props: ["source"],
-  setup(props: any, { emit }) {
+  setup(props: any) {
     const compiledSource = shallowRef<ComponentOptions | null>(null);
     watch(
       () => props.source,
@@ -14,7 +19,7 @@ export default {
         const { code } = compileTemplate(newSource);
         compiledSource.value = {
           setup() {
-            return { data, emit, on };
+            return functions;
           },
           render: code,
         };

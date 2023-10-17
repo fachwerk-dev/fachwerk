@@ -7,6 +7,7 @@ declare global {
 
 import { parse as parseSlides } from "@slidev/parser";
 import { twMerge } from "tailwind-merge";
+import { on } from "../lib/events";
 
 import IconLeft from "~icons/ri/arrow-left-line";
 
