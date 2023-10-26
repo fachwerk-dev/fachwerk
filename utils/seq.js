@@ -9,9 +9,5 @@
  * @returns {number[]} An array of numbers, starting from `start`, incrementing by `step` for each subsequent number, until there are `length` numbers in the array.
  */
 export function seq(length, step = 1, start = 0) {
-  const result = [];
-  for (let i = 0; i < length; i++) {
-    result.push(start + i * step);
-  }
-  return result;
+  return Array.from({ length }, (_, i) => start + i * step);
 }
