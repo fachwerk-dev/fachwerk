@@ -73,7 +73,7 @@ function timeAgo(isoTimestamp) {
       <div v-if="documents" class="grid md:grid-cols-3 gap-6">
         <NuxtLink
           v-for="d in documents"
-          :to="'/' + d.id"
+          :to="'/dev/' + d.id"
           class="rounded shadow grid grid-rows-[1fr_auto] overflow-hidden"
         >
           <div
