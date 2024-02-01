@@ -1,5 +1,5 @@
 <script lang="ts">
-import { h, ComponentOptions, watch, shallowRef } from "vue";
+import { h, watch, shallowRef } from "vue";
 
 const modules = import.meta.glob("../utils/*.js", { eager: true });
 const functions: any = Object.values(modules).reduce(
@@ -12,7 +12,7 @@ const functions: any = Object.values(modules).reduce(
 export default {
   props: ["source"],
   setup(props: any) {
-    const compiledSource = shallowRef<ComponentOptions | null>(null);
+    const compiledSource = shallowRef(null);
     watch(
       () => props.source,
       (newSource) => {
