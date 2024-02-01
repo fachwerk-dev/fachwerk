@@ -37,6 +37,8 @@ watchDebounced(
 );
 
 const onEditorClick = useEditor(activePage, pages, editor);
+
+useTailwind();
 </script>
 
 <template>
@@ -50,8 +52,11 @@ const onEditorClick = useEditor(activePage, pages, editor);
       />
     </div>
     <div class="overflow-y-auto h-full">
-      <Page2 v-for="(page, i) in pages" :page="page" :active="i === activePage">
-      </Page2>
+      <Page2
+        v-for="(page, i) in pages"
+        :page="page"
+        :active="i === activePage"
+      />
     </div>
   </div>
   <div
