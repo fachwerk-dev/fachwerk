@@ -51,12 +51,6 @@ const onEditorClick = useEditor(activePage, pages, editor);
     </div>
     <div class="overflow-y-auto h-full">
       <Page2 v-for="(page, i) in pages" :page="page" :active="i === activePage">
-        <div
-          v-for="section in page.sections"
-          class="text-xl leading-10 p-8 prose border border-red-500 m-2"
-        >
-          <Compiler :source="section.content" />
-        </div>
       </Page2>
     </div>
   </div>

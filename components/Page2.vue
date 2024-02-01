@@ -61,6 +61,11 @@ const pageClass = computed(() =>
 <template>
   <div :class="pageClass">
     <div ref="el" class="invisible absolute -top-32 left-0 right-0 h-32" />
-    <slot />
+    <div
+      v-for="section in page.sections"
+      class="text-xl leading-10 p-8 prose border border-red-500 m-2"
+    >
+      <Compiler :source="section.content" />
+    </div>
   </div>
 </template>
