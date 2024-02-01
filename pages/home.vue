@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// {{ /*timeAgo(d.updatedAt)*/ }}
 import IconLeft from "~icons/ri/arrow-left-line";
 
 const { find, create } = useStrapi();
@@ -83,7 +84,7 @@ function timeAgo(isoTimestamp) {
           <div class="py-3 px-4 flex items-center gap-1 bg-white">
             <div class="text-gray-500 flex justify-between w-full">
               <div class="font-semibold">{{ d.id }}</div>
-              <div>{{ d.user?.username }} {{ timeAgo(d.updatedAt) }}</div>
+              <div>{{ d.user?.username }}</div>
             </div>
           </div>
         </NuxtLink>

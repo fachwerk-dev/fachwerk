@@ -1,6 +1,4 @@
 <script setup>
-import { default as dompurify } from "dompurify";
-const { sanitize } = dompurify;
 import config from "../tailwind.config";
 
 const content = ref(`

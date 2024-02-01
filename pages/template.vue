@@ -1,6 +1,6 @@
 <script setup>
-import { default as dompurify } from "dompurify";
-const { sanitize } = dompurify;
+import pkg from "isomorphic-dompurify";
+const { sanitize } = pkg;
 const content = ref(`
 <input :class="{data.a}" />
 <input v-model="data.b" />

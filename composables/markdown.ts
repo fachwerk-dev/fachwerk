@@ -1,5 +1,6 @@
 import { marked } from "marked";
-import { sanitize } from "isomorphic-dompurify";
+import pkg from "isomorphic-dompurify";
+const { sanitize } = pkg;
 import markedKatex from "marked-katex-extension";
 
 function preSanitize(content: string) {
