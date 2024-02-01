@@ -11,6 +11,8 @@ const { data: doc } = await useAsyncData("document-" + id, () =>
   }).then((res) => parseStrapi(res))
 );
 
+// On page load we populate the editor contents with data in Strapi
+
 const content = ref(doc.value.content);
 
 const pages = ref<any[]>([]);
@@ -63,8 +65,11 @@ const onTextarea = () => {
       />
     </div>
     <div class="overflow-y-auto h-full">
-      <Page v-for="page in pages">
-        <div v-for="section in page.sections">
+      <Page v-for="(page, i) in pages" :active="i === activePage">
+        <div
+          v-for="section in page.sections"
+          class="text-xl leading-10 p-8 prose"
+        >
           <Compiler :source="section.content" />
         </div>
       </Page>
@@ -73,6 +78,6 @@ const onTextarea = () => {
   <div
     class="fixed top-0 right-0 bottom-0 bg-white/80 w-1/6 border-l p-4 font-mono whitespace-pre"
   >
-    {{ { row, activePage } }}
+    {{ { id, row, activePage } }}
   </div>
 </template>
