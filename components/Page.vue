@@ -38,7 +38,7 @@ const defaultClasses = `
 
 const gridClasses = {
   1: "",
-  2: "grid-cols-2",
+  2: "sm:grid-cols-2",
   3: "grid-cols-3",
   4: "grid-cols-4",
   5: "grid-cols-5",
@@ -50,7 +50,7 @@ const gridClasses = {
 };
 
 const editClasses = [
-  "text-[120%] md:text-[170%] w-screen h-screen",
+  "text-[120%] md:text-[170%] w-screen md:h-screen md:snap-start",
   "aspect-video",
 ];
 
@@ -66,7 +66,7 @@ const pageClass = computed(() =>
 
 <template>
   <div :class="pageClass">
-    <div ref="el" class="invisible absolute -top-32 left-0 right-0 h-32" />
+    <div ref="el" class="invisible absolute -top-0 left-0 right-0 h-0" />
     <Section v-for="section in page.sections" :section="section" :edit="edit" />
   </div>
 </template>
