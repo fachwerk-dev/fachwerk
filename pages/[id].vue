@@ -7,9 +7,7 @@ declare global {
 
 import { parse as parseSlides } from "@slidev/parser";
 import { twMerge } from "tailwind-merge";
-
 import IconLeft from "~icons/ri/arrow-left-line";
-
 import config from "../tailwind.config";
 
 useScriptTag("https://cdn.tailwindcss.com", () => {
@@ -32,7 +30,7 @@ const modes = [
   resolveComponent("IconMode2"),
   resolveComponent("IconMode3"),
 ];
-const mode = ref(0);
+const mode = ref(2);
 
 const id = route.params.id as string;
 
@@ -75,7 +73,7 @@ function isImage(text: string) {
   return regex.test(text.trim());
 }
 
-const pages = ref([]);
+const pages = ref<any[]>([]);
 watchDebounced(
   content,
   async (c) => {
@@ -148,8 +146,9 @@ watch([ArrowLeft, ArrowRight], () => {
   }
 });
 
-on("prev", prev);
-on("next", next);
+// TODO: bring back on()
+// on("prev", prev);
+// on("next", next);
 
 // Image upload
 
@@ -160,7 +159,11 @@ const { data: files, refresh } = useAsyncData(
 );
 const showImages = ref(false);
 
-const { files: uploadFiles = [], open, onChange: onUpload } = useFileDialog();
+const {
+  files: uploadFiles = [],
+  open,
+  onChange: onUpload,
+} = useFileDialog() as any;
 
 const uploadTitles = ["Add images", "Uploading..."];
 const uploadStatus = ref(0);
@@ -171,7 +174,7 @@ onUpload(async () => {
   [...(uploadFiles.value || [])].forEach((uploadFile) =>
     formData.append("files", uploadFile)
   );
-  const uploaded = await client(`/upload`, {
+  await client(`/upload`, {
     method: "POST",
     body: formData,
   });
@@ -194,7 +197,7 @@ const onFileClick = (file: any) => {
 const modeClasses = [
   "text-[110%] md:text-[100%]",
   "text-[75%] aspect-video",
-  "text-[110%] md:text-[130%] w-screen",
+  "text-[110%] md:text-[130%] max-w-screen-lg mx-auto",
   "text-[120%] md:text-[160%] w-screen min-h-screen",
 ];
 
@@ -217,7 +220,7 @@ const pageClass = (length: number) => {
     9: "grid-cols-3 grid-rows-3",
     10: "grid-cols-2 grid-rows-5",
   };
-  return twMerge(baseClasses, classes[length]);
+  return twMerge(baseClasses, classes[length as keyof typeof classes]);
 };
 </script>
 
@@ -247,6 +250,7 @@ const pageClass = (length: number) => {
       <div class="flex md:flex-col gap-3">
         <button v-for="(m, i) in modes" @click="mode = i">
           <component
+            v-show="!user ? [2, 3].includes(i) : true"
             :is="m"
             class="w-6 h-6"
             :class="{ 'opacity-50': mode !== i }"
@@ -254,6 +258,7 @@ const pageClass = (length: number) => {
         </button>
       </div>
       <button
+        v-show="user"
         @click="showImages = !showImages"
         class="hidden md:block fixed bottom-5 left-5"
       >
