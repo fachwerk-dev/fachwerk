@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { twMerge } from "tailwind-merge";
 
-const { section } = defineProps<{ section: any }>();
+const props = defineProps<{ section: any; edit: boolean }>();
 
-const defaultClasses = `prose`;
-const sectionClass = computed(() =>
-  twMerge(defaultClasses, section.type !== "image" ? "p-8" : "")
-);
+const sectionClass = computed(() => {
+  const typeClass = {
+    text: props.edit ? "p-12" : "p-8 md:p-20",
+    image: "",
+  };
+  return twMerge(typeClass[props.section.type as keyof typeof typeClass]);
+});
 </script>
 <template>
   <div :class="sectionClass">

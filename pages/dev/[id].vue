@@ -39,29 +39,32 @@ watchDebounced(
 const onEditorClick = useEditor(activePage, pages, editor);
 
 useTailwind();
+
+const edit = ref(false);
 </script>
 
 <template>
-  <div class="grid grid-cols-2 fixed inset-0">
-    <div class="relative">
-      <textarea
-        ref="editor"
-        class="w-full md:absolute inset-0 block h-[40vh] md:h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
-        v-model="content"
-        @click="onEditorClick"
-      />
-    </div>
+  <div class="grid-cols-2 fixed inset-0" :class="edit ? 'md:grid' : ''">
+    <textarea
+      ref="editor"
+      class="hidden w-full h-auto outline-none font-mono p-6 bg-gray-800 text-white overflow-y-auto"
+      :class="edit ? 'md:block' : ''"
+      v-model="content"
+      @click="onEditorClick"
+    />
     <div class="overflow-y-auto h-full">
-      <Page2
+      <Page
         v-for="(page, i) in pages"
         :page="page"
         :active="i === activePage"
+        :edit="edit"
       />
     </div>
   </div>
   <div
     class="fixed right-0 bottom-0 bg-white/80 w-1/6 border-l p-4 font-mono whitespace-pre"
   >
+    <button class="block border" @click="edit = !edit">{{ edit }}</button>
     {{ { id, activePage } }}
   </div>
 </template>

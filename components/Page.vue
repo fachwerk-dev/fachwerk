@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { twMerge } from "tailwind-merge";
 
-const props = defineProps<{ page: any; active: boolean }>();
+const props = defineProps<{ page: any; active: boolean; edit: boolean }>();
 const el = ref();
 
 watch(
@@ -34,7 +34,6 @@ const defaultClasses = `
   first:prose-headings:mb-2
   grid
   relative
-  aspect-video
 `;
 
 const gridClasses = {
@@ -50,10 +49,16 @@ const gridClasses = {
   10: "grid-cols-2 grid-rows-5",
 };
 
+const editClasses = [
+  "text-[120%] md:text-[170%] w-screen h-screen",
+  "aspect-video",
+];
+
 const pageClass = computed(() =>
   twMerge(
     defaultClasses,
     gridClasses[(props.page.sections.length || 1) as keyof typeof gridClasses],
+    editClasses[Number(props.edit)],
     props.page.frontmatter.class
   )
 );
@@ -62,6 +67,6 @@ const pageClass = computed(() =>
 <template>
   <div :class="pageClass">
     <div ref="el" class="invisible absolute -top-32 left-0 right-0 h-32" />
-    <Section v-for="section in page.sections" :section="section" />
+    <Section v-for="section in page.sections" :section="section" :edit="edit" />
   </div>
 </template>
