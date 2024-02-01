@@ -1,7 +1,7 @@
 <script lang="ts">
 import { h, ComponentOptions, watch, shallowRef } from "vue";
 
-const modules = import.meta.glob("../lib/*.js", { eager: true });
+const modules = import.meta.glob("../utils/*.js", { eager: true });
 const functions: any = Object.values(modules).reduce(
   (acc: any, module: any) => {
     return { ...acc, ...module };
