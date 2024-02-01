@@ -25,8 +25,8 @@ const textarea = ref();
 const { focused } = useFocus(textarea, { initialValue: false });
 
 const modes = [
-  resolveComponent("IconMode0"),
   resolveComponent("IconMode1"),
+  resolveComponent("IconMode0"),
   resolveComponent("IconMode2"),
   resolveComponent("IconMode3"),
 ];
@@ -195,9 +195,9 @@ const onFileClick = (file: any) => {
 };
 
 const modeClasses = [
-  "text-[110%] md:text-[100%]",
+  "text-[110%] md:text-[100%] aspect-video",
   "text-[75%] aspect-video",
-  "text-[110%] md:text-[130%] max-w-screen-lg mx-auto",
+  "text-[110%] md:text-[130%] max-w-screen-lg mx-auto aspect-video first: mt-8 mb-8",
   "text-[120%] md:text-[160%] w-screen min-h-screen",
 ];
 
