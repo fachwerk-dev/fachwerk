@@ -49,7 +49,7 @@ const edit = ref(false);
 
 const pagesClass = computed(() => {
   const baseClasses = "overflow-y-auto h-full snap-y";
-  const editClasses = ["snap-y", ""];
+  const editClasses = ["", ""];
   return twMerge(baseClasses, editClasses[Number(edit.value)]);
 });
 
@@ -99,16 +99,9 @@ watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft], () => {
         :page="page"
         :active="i === activePage"
         :edit="edit"
+        @activated="activePage = i"
       />
     </div>
-  </div>
-  <div
-    class="fixed right-0 bottom-0 bg-white/80 w-1/6 border-l p-4 font-mono whitespace-pre"
-  >
-    <button class="block border" @click="edit = !edit">{{ edit }}</button>
-    <button class="block border" @click="prev">&larr;</button>
-    <button class="block border" @click="next">&rarr;</button>
-    {{ { id, activePage } }}
   </div>
   <div :class="navClass">
     <IconEdit class="size-6 cursor-pointer" @click="edit = !edit" />

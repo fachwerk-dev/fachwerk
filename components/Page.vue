@@ -2,13 +2,13 @@
 import { twMerge } from "tailwind-merge";
 
 const props = defineProps<{ page: any; active: boolean; edit: boolean }>();
-const el = ref();
+const topElement = ref();
 
 watch(
   () => props.active,
   () => {
     if (props.active) {
-      el.value.scrollIntoView({ behavior: "smooth" });
+      topElement.value.scrollIntoView({ behavior: "smooth" });
     }
   }
 );
@@ -51,7 +51,7 @@ const gridClasses = {
 };
 
 const editClasses = [
-  "text-[120%] md:text-[170%] w-screen md:h-screen md:snap-start",
+  "text-[120%] md:text-[170%] w-screen md:h-screen md:snap-center",
   "aspect-video",
 ];
 
@@ -63,11 +63,26 @@ const pageClass = computed(() =>
     props.page.frontmatter.class
   )
 );
+const emit = defineEmits(["activated"]);
+const centerElement = ref(null);
+const visible = ref(false);
+useIntersectionObserver(
+  centerElement,
+  ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      emit("activated");
+    }
+  },
+  { threshold: 0.5 }
+);
 </script>
 
 <template>
-  <div :class="pageClass">
-    <div ref="el" class="invisible absolute -top-0 left-0 right-0 h-0" />
+  <div :class="pageClass" ref="centerElement">
+    <div
+      ref="topElement"
+      class="invisible absolute left-0 right-0 h-32 top-0 bg-gray-500/50"
+    />
     <Section v-for="section in page.sections" :section="section" :edit="edit" />
   </div>
 </template>
