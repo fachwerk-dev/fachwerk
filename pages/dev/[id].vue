@@ -111,9 +111,9 @@ watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft], () => {
     {{ { id, activePage } }}
   </div>
   <div :class="navClass">
-    <IconEdit class="w-6 h-6 cursor-pointer" @click="edit = !edit" />
+    <IconEdit class="size-6 cursor-pointer" @click="edit = !edit" />
     <NuxtLink to="/home" class="block">
-      <IconLeft class="w-6 h-6" />
+      <IconLeft class="size-6" />
     </NuxtLink>
   </div>
 </template>

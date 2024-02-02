@@ -16,6 +16,7 @@ watch(
 const defaultClasses = `
   max-w-none
   prose
+  prose-headings:text-balance
   prose-p:mt-0
   prose-code:text-[90%]
   prose-code:bg-gray-800
