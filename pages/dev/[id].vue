@@ -2,6 +2,7 @@
 import { twMerge } from "tailwind-merge";
 import IconLeft from "~icons/ri/arrow-left-line";
 import IconEdit from "~icons/ri/quill-pen-line";
+import "katex/dist/katex.min.css";
 
 const route = useRoute();
 const { findOne, update } = useStrapi();
