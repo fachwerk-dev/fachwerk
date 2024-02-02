@@ -26,6 +26,10 @@ export default defineNuxtConfig({
             wght: [400, 600, 700],
             ital: [400, 600, 700],
           },
+          "IBM Plex Serif": {
+            wght: [300, 400, 700],
+            ital: [300, 400, 700],
+          },
         },
       },
     ],

@@ -73,7 +73,7 @@ const pageClass = computed(() =>
 );
 const emit = defineEmits(["activated"]);
 const centerElement = ref(null);
-const visible = ref(false);
+
 useIntersectionObserver(
   centerElement,
   ([{ isIntersecting }]) => {
@@ -87,10 +87,7 @@ useIntersectionObserver(
 
 <template>
   <div :class="pageClass" ref="centerElement">
-    <div
-      ref="topElement"
-      class="invisible absolute left-0 right-0 h-32 top-0 bg-gray-500/50"
-    />
+    <div ref="topElement" class="invisible absolute left-0 right-0 top-0" />
     <Section v-for="section in page.sections" :section="section" :edit="edit" />
   </div>
 </template>
