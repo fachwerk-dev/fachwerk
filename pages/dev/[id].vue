@@ -48,8 +48,8 @@ useTailwind();
 const edit = ref(false);
 
 const pagesClass = computed(() => {
-  const baseClasses = "overflow-y-auto h-full snap-y";
-  const editClasses = ["", ""];
+  const baseClasses = "overflow-y-auto h-full";
+  const editClasses = ["snap-y", ""];
   return twMerge(baseClasses, editClasses[Number(edit.value)]);
 });
 
@@ -99,7 +99,7 @@ watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft], () => {
         :page="page"
         :active="i === activePage"
         :edit="edit"
-        @activated="activePage = i"
+        @activated="!edit ? (activePage = i) : null"
       />
     </div>
   </div>
