@@ -1,4 +1,5 @@
 import { parse as parseSlides } from "@slidev/parser";
+import { marked } from "marked";
 
 function isImage(text: string) {
   const regex = /^<img [^>]+>$/i;
@@ -17,6 +18,7 @@ export async function parseContent(content: string) {
       }));
     return {
       ...page,
+      title: marked.parseInline(page.title || ""),
       sections,
     };
   });
