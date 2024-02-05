@@ -2,7 +2,7 @@
 import { twMerge } from "tailwind-merge";
 import IconLeft from "~icons/ri/arrow-left-line";
 import IconEdit from "~icons/ri/quill-pen-line";
-import IconPresent from "~icons/ri/slideshow-3-line";
+import IconPresent from "~icons/ri/play-line";
 import IconImage from "~icons/ri/image-line";
 import "katex/dist/katex.min.css";
 
@@ -46,21 +46,16 @@ watchDebounced(
   { debounce: 3000 }
 );
 
-const onEditorClick = useEditor(activePage, pages, editor);
+const { onEditorClick, row } = useEditor(activePage, pages, editor);
 
 useTailwind();
 
 const edit = ref(isEdit);
+const images = ref(false);
 
 const pagesClass = computed(() => {
   const baseClasses = "overflow-y-auto h-full";
   const editClasses = ["snap-y", ""];
-  return twMerge(baseClasses, editClasses[Number(edit.value)]);
-});
-
-const navClass = computed(() => {
-  const baseClasses = "";
-  const editClasses = ["", "w-1/2"];
   return twMerge(baseClasses, editClasses[Number(edit.value)]);
 });
 
@@ -94,13 +89,21 @@ watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft, Space, Shift], () => {
     }
   }
 });
+
+const onPaste = (url: string) => {
+  focused.value = true;
+  let lines = content.value.split(/\r?\n/);
+  lines.splice(row.value >= 0 ? row.value : lines.length, 0, `\n${url}\n`);
+  content.value = lines.join("\n");
+  images.value = false;
+};
 </script>
 
 <template>
   <div class="grid-cols-2 fixed inset-0" :class="edit ? 'md:grid' : ''">
     <textarea
       ref="editor"
-      class="hidden w-full h-auto outline-none font-mono pl-12 pr-10 pt-8 bg-gray-800 text-white overflow-y-auto"
+      class="hidden w-full h-auto outline-none font-mono pl-20 pr-10 pt-6 bg-gray-800 text-white overflow-y-auto"
       :class="edit ? 'md:block' : ''"
       v-model="content"
       @click="onEditorClick"
@@ -115,27 +118,26 @@ watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft, Space, Shift], () => {
       />
     </div>
   </div>
-  <div
-    class="fixed bottom-0 left-0 px-3 flex flex-col gap-4 justify-end pb-4 h-36 opacity-25"
-  >
-    <IconPresent
-      v-if="edit"
-      class="size-6 cursor-pointer text-gray-500"
+  <div class="flex flex-col gap-4 fixed top-0 left-0 p-6">
+    <NuxtLink to="/dev/home">
+      <IconLeft class="size-6 text-gray-500" />
+    </NuxtLink>
+    <IconEdit
+      class="size-6 cursor-pointer"
+      :class="edit ? 'text-yellow-500' : 'text-gray-500'"
       @click="edit = !edit"
     />
-    <IconEdit
-      v-else
-      class="size-6 cursor-pointer text-gray-500"
-      @click="edit = !edit"
+    <IconImage
+      v-if="edit"
+      :class="images ? 'text-yellow-500' : 'text-gray-500'"
+      class="size-6 cursor-pointer"
+      @click="images = !images"
     />
   </div>
-  <NuxtLink to="/dev/home" class="block fixed top-0 left-0 p-3 opacity-25">
-    <IconLeft class="size-6 text-gray-500" />
-  </NuxtLink>
   <div
-    v-if="edit"
+    v-if="edit && images"
     class="fixed top-0 right-0 bottom-0 bg-gray-800/95 w-[25vw] -translate-x-[25vw] p-6"
   >
-    <Images />
+    <Images @paste="onPaste" />
   </div>
 </template>

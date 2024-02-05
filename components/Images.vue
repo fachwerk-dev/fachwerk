@@ -28,12 +28,14 @@ onUpload(async () => {
   uploadStatus.value = 0;
 });
 
+const emit = defineEmits(["paste"]);
+
 const onFileClick = (file: any) => {
   const url = `${file.formats?.large?.url}?name=${file.name.replace(
     /\s+/g,
     "+"
   )}`;
-  console.log(url);
+  emit("paste", url);
 };
 </script>
 
@@ -42,7 +44,7 @@ const onFileClick = (file: any) => {
     <Button class="md:w-full" type="button" @click="open">
       {{ uploadTitles[uploadStatus] }}
     </Button>
-    <div class="grid grid-cols-2 gap-4 overflow-y-auto item">
+    <div class="grid grid-cols-2 gap-5 overflow-y-auto item p-1">
       <button
         v-for="file in [...(files || [])].reverse()"
         @click="onFileClick(file)"

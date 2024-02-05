@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { twMerge } from "tailwind-merge";
 import IconEdit from "~icons/ri/quill-pen-line";
+
 useTailwind();
 
 const { find, create } = useStrapi();
@@ -13,8 +14,7 @@ const { data: documents, refresh } = await useAsyncData("documents", () =>
   }).then((res) => parseStrapi(res))
 );
 
-// const content = documents.value[12].content;
-// const doc = (await parseContent(content))[0];
+useIntervalFn(refresh, 2000);
 
 const parseContents = documents.value.map(async ({ content }: any) => {
   return await parseContent(content);
@@ -76,14 +76,14 @@ const onCreate = async () => {
               v-html="content.title || '№' + documents[i].id"
             />
             <div class="flex justify-between">
-              <div class="opacity-70 text-sm !font-sans">
+              <div class="opacity-70 text-sm !font-sans font-semibold">
                 {{ documents[i].user?.username }}
               </div>
               <NuxtLink
                 :to="'/dev/' + documents[i].id + '?edit'"
                 class="text-sm no-underline opacity-0 transition group-hover:opacity-50"
               >
-                <IconEdit />
+                <IconEdit class="size-6" />
               </NuxtLink>
             </div>
           </div>

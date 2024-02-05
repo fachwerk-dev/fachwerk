@@ -4,7 +4,7 @@ export function useEditor(
   editor: Ref<any>
 ) {
   const row = ref(-1);
-  return () => {
+  const onEditorClick = () => {
     row.value =
       editor.value.value
         .substr(0, editor.value.selectionStart)
@@ -14,4 +14,5 @@ export function useEditor(
     );
     activePage.value = index > -1 ? index : 0;
   };
+  return { row, onEditorClick };
 }
