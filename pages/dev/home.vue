@@ -4,7 +4,7 @@ import IconEdit from "~icons/ri/quill-pen-line";
 
 useTailwind();
 
-const { find, create } = useStrapi();
+const { find, create, delete: del } = useStrapi();
 const user = useStrapiUser();
 
 const { data: documents, refresh } = await useAsyncData("documents", () =>
@@ -14,7 +14,7 @@ const { data: documents, refresh } = await useAsyncData("documents", () =>
   }).then((res) => parseStrapi(res))
 );
 
-useIntervalFn(refresh, 2000);
+useIntervalFn(() => refresh(), 2000);
 
 const parseContents = documents.value.map(async ({ content }: any) => {
   return await parseContent(content);
@@ -39,8 +39,18 @@ const onCreate = async () => {
       content: "",
       user: user.value?.id,
     }).then((res) => parseStrapi(res));
-    await navigateTo({ path: "/" + id });
+    await navigateTo({ path: "/dev/" + id });
   }
+};
+
+const onDelete = async (id: number) => {
+  if (user.value) {
+    const confirmDelete = confirm("Do you want to delete?");
+    if (confirmDelete) {
+      await del("documents", id);
+    }
+  }
+  await refresh();
 };
 </script>
 
@@ -63,22 +73,24 @@ const onCreate = async () => {
         <Login />
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
-        <NuxtLink
-          v-for="(content, i) in contents"
-          :to="'/dev/' + documents[i].id"
-        >
+        <div v-for="(content, i) in contents">
           <div
             :class="content.frontmatter?.class"
             class="flex flex-col justify-between rounded"
           >
-            <h1
-              class="text-2xl font-bold text-balance pr-4"
-              v-html="content.title || '№' + documents[i].id"
-            />
+            <NuxtLink :to="'/dev/' + documents[i].id"
+              ><h1
+                class="text-2xl font-bold text-balance pr-4"
+                v-html="content.title || '№' + documents[i].id"
+            /></NuxtLink>
             <div class="flex justify-between">
               <div class="opacity-70 text-sm !font-sans font-semibold">
                 {{ documents[i].user?.username }}
               </div>
+              <IconEdit
+                class="size-6"
+                @click.stop="onDelete(documents[i].id)"
+              />
               <NuxtLink
                 :to="'/dev/' + documents[i].id + '?edit'"
                 class="text-sm no-underline opacity-0 transition group-hover:opacity-50"
@@ -87,7 +99,7 @@ const onCreate = async () => {
               </NuxtLink>
             </div>
           </div>
-        </NuxtLink>
+        </div>
       </div>
     </div>
     <div class="h-16" />
