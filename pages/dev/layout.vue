@@ -167,8 +167,8 @@ const templates = computed(() => {
 });
 </script>
 <template>
-  <div class="grid grid-cols-[1fr_3fr]">
-    <div class="p-4 flex flex-col gap-3">
+  <div class="grid grid-cols-[2fr_5fr]">
+    <div class="p-8 flex flex-col gap-3">
       Number of colums: {{ count }}
       <input type="range" v-model="count" min="1" max="10" />
       <div class="font-bold mt-4">Layouts</div>
@@ -182,27 +182,24 @@ const templates = computed(() => {
       </div>
       <div class="font-bold mt-4">Style</div>
       <pre class="whitespace-pre-wrap text-sm">
-cols: {{ templates[activeTemplate].cols }}
-
-rows: {{ templates[activeTemplate].rows }}
-
-areas: {{ templates[activeTemplate].areas }}
-
-area: {{ templates[activeTemplate].area }}
+gridTemplateColumns: {{ templates[activeTemplate].cols }}
+gridTemplateRows: {{ templates[activeTemplate].rows }}
+gridTemplateAreas: {{ templates[activeTemplate].areas }}
+gridArea: {{ templates[activeTemplate].area }}
       </pre>
     </div>
     <div
-      class="p-4 grid gap-4 h-screen mix-blend-multiply"
+      class="p-8 grid gap-4 h-screen mix-blend-multiply"
       :style="{
-        gridTemplateAreas: templates[activeTemplate].areas,
         gridTemplateColumns: templates[activeTemplate].cols,
         gridTemplateRows: templates[activeTemplate].rows,
+        gridTemplateAreas: templates[activeTemplate].areas,
       }"
     >
       <div
         v-for="a in areas"
         contenteditable
-        class="p-4 bg-gray-300 text-8xl font-bold"
+        class="p-4 bg-gray-300 text-6xl font-bold"
         :style="{
           opacity: 0.5,
           gridArea: templates[activeTemplate].area || 'g' + a,
