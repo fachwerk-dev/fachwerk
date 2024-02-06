@@ -86,7 +86,7 @@ useIntersectionObserver(
 
 <template>
   <div :class="pageClass" ref="centerElement">
-    <div ref="topElement" class="invisible absolute left-0 right-0 top-0" />
     <Section v-for="section in page.sections" :section="section" :edit="edit" />
   </div>
+  <div ref="topElement" class="invisible absolute left-0 right-0 top-0" />
 </template>

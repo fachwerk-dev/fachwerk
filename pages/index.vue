@@ -86,7 +86,7 @@ const onDelete = async (id: number) => {
               class="text-2xl font-bold text-balance pr-16"
               v-html="content.title || 'Untitled ' + documents[i].id"
             />
-            <div class="opacity-70 text-sm !font-sans font-semibold">
+            <div class="opacity-70 text-sm !font-sans">
               {{ documents[i].user?.username }}
             </div>
           </NuxtLink>
