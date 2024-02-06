@@ -20,11 +20,8 @@ const defaultClasses = `
   prose-headings:tracking-tight	
   prose-headings:opacity-90
   prose-h1:text-[320%]
-  prose-h1:pb-[1%]
-  prose-h1:leading-[100%]
   prose-h1:tracking-tight	
   prose-h2:text-[200%]
-  prose-h2:leading-[100%]
   prose-h2:tracking-tight	
   prose-p:mt-0
   prose-code:text-[90%]

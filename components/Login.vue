@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-const user = useStrapiUser();
-const { login, logout } = useStrapiAuth();
+const { login } = useStrapiAuth();
 
 const loading = ref(false);
 const form = reactive({ identifier: "", password: "" });
@@ -16,7 +15,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <form v-if="!user" @submit.prevent="onSubmit" class="flex flex-col gap-4">
+  <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
     <input
       v-model="form.identifier"
       placeholder="Username"
@@ -40,7 +39,4 @@ const onSubmit = async () => {
       </Button>
     </div>
   </form>
-  <div v-else>
-    <button @click="logout" class="absolute top-6 right-16">Logout</button>
-  </div>
 </template>

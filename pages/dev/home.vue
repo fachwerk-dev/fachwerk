@@ -24,7 +24,7 @@ const contents = (await Promise.all(parseContents)).map((c) => {
   const content = c[0];
   const classesLength = (content.frontmatter?.class || "").split(/\s/g).length;
   content.frontmatter.class = twMerge(
-    "bg-white prose",
+    "bg-white",
     classesLength < 6 ? content.frontmatter?.class : "",
     "p-4 aspect-video px-6 py-4 shadow group"
   );
@@ -57,51 +57,41 @@ const onDelete = async (id: number) => {
 <template>
   <div class="p-8 md:p-16 bg-sky-50 min-h-screen">
     <div class="grid sm:grid-cols-2 md:grid-cols-[1fr_3fr] gap-16">
-      <div class="">
-        <div class="text-6xl mb-2">▦</div>
-        <div class="text-6xl font-bold text-balance mb-4 tracking-tight">
-          Hallo Welt.<br />Das ist<br />Fachwerk
-        </div>
-        <div class="text-lg mb-8 prose">
-          <p>
-            This is Fachwerk, a place for creating interactive documents using
-            Markdown.
-          </p>
-          <p>Without further <em>Ado</em>, let's get started!</p>
-        </div>
+      <div>
+        <Intro />
         <Button v-if="user" @click="onCreate">Create new document</Button>
-        <Login />
+        <Login v-if="!user" />
+        <Logout v-if="user" />
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
-        <div v-for="(content, i) in contents">
-          <div
-            :class="content.frontmatter?.class"
-            class="flex flex-col justify-between rounded"
-          >
-            <NuxtLink :to="'/dev/' + documents[i].id"
-              ><h1
-                class="text-2xl font-bold text-balance pr-4"
-                v-html="content.title || '№' + documents[i].id"
-            /></NuxtLink>
-            <div class="flex justify-between">
-              <div class="opacity-70 text-sm !font-sans font-semibold">
-                {{ documents[i].user?.username }}
-              </div>
-              <IconEdit
+        <div
+          v-for="(content, i) in contents"
+          class="flex flex-col justify-between rounded prose-a:no-underline prose"
+          :class="content.frontmatter?.class"
+        >
+          <NuxtLink :to="'/dev/' + documents[i].id">
+            <h1
+              class="text-2xl font-bold text-balance pr-4"
+              v-html="content.title || '№' + documents[i].id"
+            />
+          </NuxtLink>
+          <div class="flex justify-between">
+            <div class="opacity-70 text-sm !font-sans font-semibold">
+              {{ documents[i].user?.username }}
+            </div>
+            <!-- <IconEdit
                 class="size-6"
                 @click.stop="onDelete(documents[i].id)"
-              />
-              <NuxtLink
-                :to="'/dev/' + documents[i].id + '?edit'"
-                class="text-sm no-underline opacity-0 transition group-hover:opacity-50"
-              >
-                <IconEdit class="size-6" />
-              </NuxtLink>
-            </div>
+              /> -->
+            <NuxtLink
+              :to="'/dev/' + documents[i].id + '?edit'"
+              class="text-sm no-underline opacity-0 transition group-hover:opacity-50"
+            >
+              <IconEdit class="size-6" />
+            </NuxtLink>
           </div>
         </div>
       </div>
     </div>
-    <div class="h-16" />
   </div>
 </template>
