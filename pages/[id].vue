@@ -104,3 +104,15 @@ const onPaste = (url: string) => {
     <Images @paste="onPaste" />
   </div>
 </template>
+
+<style>
+.katex-display > .katex {
+  white-space: normal;
+}
+.katex-display > .base {
+  margin: 0.25em 0;
+}
+.katex-display {
+  margin: 0.5em 0;
+}
+</style>

@@ -25,6 +25,7 @@ const defaultClasses = `
   prose-h2:text-[200%]
   prose-h2:tracking-tight	
   prose-p:mt-0
+  prose-a:break-all
   prose-code:text-[90%]
   prose-code:bg-gray-800
   prose-code:rounded

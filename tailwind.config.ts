@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 import Typography from "@tailwindcss/typography";
-
+import Container from "@tailwindcss/container-queries";
 export default <Partial<Config>>{
   theme: {
     extend: {
@@ -10,5 +10,5 @@ export default <Partial<Config>>{
       },
     },
   },
-  plugins: [Typography],
+  plugins: [Typography, Container],
 };
