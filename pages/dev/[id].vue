@@ -11,6 +11,12 @@ const user = useStrapiUser();
 const edit = ref(false);
 const images = ref(false);
 
+const isMd = useMediaQuery("(min-width: 768px)");
+watch(isMd, (newIsMd) => {
+  if (!newIsMd) {
+    edit.value = false;
+  }
+});
 const id = route.params.id as string;
 if (route.query.edit === null) {
   edit.value = true;
@@ -26,7 +32,6 @@ const { data: doc } = await useAsyncData("document-" + id, () =>
 const content = ref(doc.value.content);
 const pages = ref<any[]>([]);
 const editor = ref();
-const activePage = ref(0);
 const { focused } = useFocus(editor, { initialValue: false });
 
 watchDebounced(
@@ -47,43 +52,14 @@ watchDebounced(
   { debounce: 3000 }
 );
 
+const pagesEl = ref();
+const { activePage } = useNav(pages, pagesEl, focused);
 const { onEditorClick, row } = useEditor(activePage, pages, editor);
 
 const pagesClass = computed(() => {
   const baseClasses = "overflow-y-auto h-full";
   const editClasses = ["snap-y", ""];
   return twMerge(baseClasses, editClasses[Number(edit.value)]);
-});
-
-const next = () => {
-  if (activePage.value < pages.value.length - 1) {
-    activePage.value++;
-  }
-};
-const prev = () => {
-  if (activePage.value > 0) {
-    activePage.value--;
-  }
-};
-
-const { ArrowUp, ArrowRight, ArrowDown, ArrowLeft, Space, Shift } =
-  useMagicKeys();
-watch([ArrowUp, ArrowRight, ArrowDown, ArrowLeft, Space, Shift], () => {
-  if (!focused.value) {
-    if (ArrowLeft.value || ArrowUp.value) {
-      prev();
-    }
-    if (ArrowRight.value || ArrowDown.value) {
-      next();
-    }
-    if (Space.value) {
-      if (Shift.value) {
-        prev();
-      } else {
-        next();
-      }
-    }
-  }
 });
 
 const onPaste = (url: string) => {
@@ -104,7 +80,7 @@ const onPaste = (url: string) => {
       v-model="content"
       @click="onEditorClick"
     />
-    <div :class="pagesClass">
+    <div :class="pagesClass" ref="pagesEl">
       <Page
         v-for="(page, i) in pages"
         :page="page"

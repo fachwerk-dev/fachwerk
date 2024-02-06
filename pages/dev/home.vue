@@ -68,7 +68,6 @@ const onDelete = async (id: number) => {
         <Button v-if="user" @click="onCreate">Create new document</Button>
         <Login v-if="!user" />
         <Logout v-if="user" />
-        <Button @click="refresh">Refresh</Button>
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
         <div
@@ -76,28 +75,30 @@ const onDelete = async (id: number) => {
           class="relative flex flex-col justify-between rounded prose-a:no-underline prose group"
           :class="content.frontmatter?.class"
         >
-          <NuxtLink :to="'/dev/' + documents[i].id">
+          <NuxtLink
+            :to="'/dev/' + documents[i].id"
+            class="flex flex-col justify-between h-full"
+          >
             <h1
               class="text-2xl font-bold text-balance pr-16"
               v-html="content.title || '№' + documents[i].id"
             />
-          </NuxtLink>
-          <div class="flex justify-between">
             <div class="opacity-70 text-sm !font-sans font-semibold">
               {{ documents[i].user?.username }}
             </div>
-            <div
-              class="absolute right-0 top-0 p-4 text-sm no-underline opacity-0 transition group-hover:opacity-100 cursor-pointer"
-            >
-              <IconDelete
-                class="size-6 text-red-500"
-                @click.stop="onDelete(documents[i].id)"
-              />
-            </div>
-          </div>
+          </NuxtLink>
+          <!-- <div
+            class="absolute right-0 top-0 p-4 text-sm no-underline opacity-0 transition group-hover:opacity-100 cursor-pointer"
+          >
+            <IconDelete
+              class="size-6 text-red-500"
+              @click.stop="onDelete(documents[i].id)"
+            />
+          </div> -->
           <NuxtLink
+            v-if="user"
             :to="'/dev/' + documents[i].id + '?edit'"
-            class="absolute right-0 bottom-0 p-4 pt-8 pl-8 text-sm no-underline opacity-0 transition group-hover:opacity-100"
+            class="hidden md:block absolute right-0 bottom-0 p-4 pt-8 pl-8 text-sm no-underline opacity-0 transition group-hover:opacity-100"
           >
             <IconEdit class="size-6 hover:text-yellow-500 transition" />
           </NuxtLink>

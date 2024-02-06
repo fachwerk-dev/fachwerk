@@ -22,16 +22,15 @@ const onSubmit = async () => {
       type="text"
       name="email"
       required
-      class="bg-transparent border border-gray-600 rounded px-4 py-3 text-lg"
+      class="bg-transparent border-2 border-gray-600 rounded px-4 py-3 text-lg shadow-inner"
     />
-
     <input
       v-model="form.password"
       placeholder="Password"
       type="password"
       name="password"
       required
-      class="bg-transparent border border-gray-600 rounded px-4 py-3 text-lg"
+      class="bg-transparent border-2 border-gray-600 rounded px-4 py-3 text-lg shadow-inner"
     />
     <div>
       <Button type="submit">
