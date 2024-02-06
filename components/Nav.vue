@@ -7,11 +7,11 @@ const edit = defineModel("edit");
 const images = defineModel("images");
 </script>
 <template>
-  <div class="flex flex-col justify-between gap-4 p-4 h-full">
+  <div class="flex flex-col justify-between gap-4 p-2 md:p-4 h-full">
     <NuxtLink to="/">
       <IconLeft class="size-6 text-gray-500" />
     </NuxtLink>
-    <div class="flex flex-col gap-4">
+    <div class="hidden md:flex flex-col gap-4">
       <IconImage
         v-if="edit"
         :class="images ? 'text-yellow-500' : 'text-gray-500'"

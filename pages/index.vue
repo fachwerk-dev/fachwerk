@@ -42,7 +42,7 @@ const onCreate = async () => {
       content: "",
       user: user.value?.id,
     }).then((res) => parseStrapi(res));
-    await navigateTo("/" + id);
+    await navigateTo({ path: "/" + id, query: { edit: null } });
   }
 };
 
@@ -64,9 +64,11 @@ const onDelete = async (id: number) => {
     <div class="grid sm:grid-cols-2 md:grid-cols-[1fr_3fr] gap-16">
       <div>
         <Intro />
-        <Button v-if="user" @click="onCreate">Create new document</Button>
-        <Login v-if="!user" />
-        <Logout v-if="user" />
+        <Button class="hidden md:block" v-if="user" @click="onCreate"
+          >Create new document</Button
+        >
+        <Login class="hidden md:block" v-if="!user" />
+        <Logout class="hidden md:block" v-if="user" />
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
         <div

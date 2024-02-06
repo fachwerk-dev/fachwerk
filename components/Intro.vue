@@ -1,6 +1,6 @@
 <template>
   <div class="text-6xl mb-2">▦</div>
-  <div class="text-6xl font-bold text-balance mb-4 tracking-tight">
+  <div class="text-5xl mdtext-6xl font-bold text-balance mb-4 tracking-tight">
     Hallo Welt.<br />Das ist<br />Fachwerk
   </div>
   <div class="text-lg mb-8">

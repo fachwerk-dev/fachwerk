@@ -34,6 +34,11 @@ const content = ref(doc.value.content);
 const pages = ref<any[]>([]);
 const editor = ref();
 const { focused } = useFocus(editor, { initialValue: false });
+onMounted(() => {
+  if (!content.value) {
+    focused.value = true;
+  }
+});
 
 watchDebounced(
   content,
