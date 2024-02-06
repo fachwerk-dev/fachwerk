@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import { twMerge } from "tailwind-merge";
 import IconEdit from "~icons/ri/quill-pen-line";
+import IconDelete from "~icons/ri/delete-bin-line";
 
 useTailwind();
 
 const { find, create, delete: del } = useStrapi();
 const user = useStrapiUser();
 
-const { data: documents, refresh } = await useAsyncData("documents", () =>
-  find("documents", {
-    populate: ["user"],
-    sort: ["id:desc"],
-  }).then((res) => parseStrapi(res))
+const { data: documents, refresh } = await useAsyncData(
+  "documents",
+  () =>
+    find("documents", {
+      populate: ["user"],
+      sort: ["id:desc"],
+    }).then((res) => {
+      return parseStrapi(res);
+    })
+  //{ server: false }
 );
 
-useIntervalFn(() => refresh(), 2000);
+//useIntervalFn(refresh, 3000);
 
 const parseContents = documents.value.map(async ({ content }: any) => {
   return await parseContent(content);
@@ -62,16 +68,17 @@ const onDelete = async (id: number) => {
         <Button v-if="user" @click="onCreate">Create new document</Button>
         <Login v-if="!user" />
         <Logout v-if="user" />
+        <Button @click="refresh">Refresh</Button>
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
         <div
           v-for="(content, i) in contents"
-          class="flex flex-col justify-between rounded prose-a:no-underline prose"
+          class="relative flex flex-col justify-between rounded prose-a:no-underline prose group"
           :class="content.frontmatter?.class"
         >
           <NuxtLink :to="'/dev/' + documents[i].id">
             <h1
-              class="text-2xl font-bold text-balance pr-4"
+              class="text-2xl font-bold text-balance pr-16"
               v-html="content.title || '№' + documents[i].id"
             />
           </NuxtLink>
@@ -79,17 +86,21 @@ const onDelete = async (id: number) => {
             <div class="opacity-70 text-sm !font-sans font-semibold">
               {{ documents[i].user?.username }}
             </div>
-            <!-- <IconEdit
-                class="size-6"
-                @click.stop="onDelete(documents[i].id)"
-              /> -->
-            <NuxtLink
-              :to="'/dev/' + documents[i].id + '?edit'"
-              class="text-sm no-underline opacity-0 transition group-hover:opacity-50"
+            <div
+              class="absolute right-0 top-0 p-4 text-sm no-underline opacity-0 transition group-hover:opacity-100 cursor-pointer"
             >
-              <IconEdit class="size-6" />
-            </NuxtLink>
+              <IconDelete
+                class="size-6 text-red-500"
+                @click.stop="onDelete(documents[i].id)"
+              />
+            </div>
           </div>
+          <NuxtLink
+            :to="'/dev/' + documents[i].id + '?edit'"
+            class="absolute right-0 bottom-0 p-4 pt-8 pl-8 text-sm no-underline opacity-0 transition group-hover:opacity-100"
+          >
+            <IconEdit class="size-6 hover:text-yellow-500 transition" />
+          </NuxtLink>
         </div>
       </div>
     </div>
