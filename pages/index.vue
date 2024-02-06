@@ -67,8 +67,10 @@ const onDelete = async (id: number) => {
         <Button class="hidden md:block" v-if="user" @click="onCreate"
           >Create new document</Button
         >
-        <Login class="hidden md:block" v-if="!user" />
-        <Logout class="hidden md:block" v-if="user" />
+        <div class="hidden md:block">
+          <Login v-if="!user" />
+          <Logout class="hidden md:block" v-if="user" />
+        </div>
       </div>
       <div class="grid lg:grid-cols-3 gap-6">
         <div
