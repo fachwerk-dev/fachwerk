@@ -72,7 +72,7 @@ const onDelete = async (id: number) => {
           <Logout class="hidden md:block" v-if="user" />
         </div>
       </div>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="grid lg:grid-cols-2 gap-6">
         <div
           v-for="(content, i) in contents"
           class="relative flex flex-col justify-between rounded prose-a:no-underline prose group"
