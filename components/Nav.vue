@@ -8,7 +8,7 @@ const images = defineModel("images");
 </script>
 <template>
   <div class="flex flex-col justify-between gap-4 p-4 h-full">
-    <NuxtLink to="/dev/home">
+    <NuxtLink to="/">
       <IconLeft class="size-6 text-gray-500" />
     </NuxtLink>
     <div class="flex flex-col gap-4">

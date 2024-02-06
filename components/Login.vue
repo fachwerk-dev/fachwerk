@@ -8,7 +8,7 @@ const onSubmit = async () => {
   loading.value = true;
   try {
     await login(form);
-    await navigateTo({ path: "/dev/home" });
+    //  await navigateTo({ path: "/" });
   } catch (e) {}
   loading.value = false;
 };

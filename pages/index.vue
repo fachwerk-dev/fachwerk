@@ -1,76 +1,109 @@
-<script lang="ts" setup>
+<script setup lang="ts">
+import { twMerge } from "tailwind-merge";
+import IconEdit from "~icons/ri/quill-pen-line";
+import IconDelete from "~icons/ri/delete-bin-line";
+
+useTailwind();
+
+const { find, create, delete: del } = useStrapi();
 const user = useStrapiUser();
-const { login, logout } = useStrapiAuth();
 
-const loading = ref(false);
-const form = reactive({ identifier: "", password: "" });
+const { data: documents, refresh } = await useAsyncData("documents", () =>
+  find("documents", {
+    populate: ["user"],
+    sort: ["id:desc"],
+  }).then((res) => {
+    return parseStrapi(res);
+  })
+);
 
-const onSubmit = async () => {
-  loading.value = true;
-  try {
-    await login(form);
-    await navigateTo({ path: "/home" });
-  } catch (e) {}
-  loading.value = false;
+//useIntervalFn(refresh, 3000);
+
+const parseContents = documents.value.map(async ({ content }: any) => {
+  return await parseContent(content);
+});
+
+const contents = (await Promise.all(parseContents)).map((c) => {
+  const content = c[0];
+  const classesLength = (content.frontmatter?.class || "").split(/\s/g).length;
+  content.frontmatter.class = twMerge(
+    "bg-white",
+    classesLength < 6 ? content.frontmatter?.class : "",
+    "p-4 aspect-video px-6 py-4 shadow group"
+  );
+  return content;
+});
+
+useIntervalFn(refresh, 2000);
+
+const onCreate = async () => {
+  if (user.value) {
+    const { id } = await create("documents", {
+      content: "",
+      user: user.value?.id,
+    }).then((res) => parseStrapi(res));
+    await navigateTo("/" + id);
+  }
+};
+
+const isRoot = computed(() => user.value?.id === 1);
+
+const onDelete = async (id: number) => {
+  if (user.value) {
+    const confirmDelete = confirm("Do you want to delete?");
+    if (confirmDelete) {
+      await del("documents", id);
+    }
+  }
+  await refresh();
 };
 </script>
 
 <template>
-  <div class="h-screen bg-gray-800 grid place-content-center">
-    <div class="px-8 py-6 flex flex-col gap-16 items-center">
-      <h1 class="font-bold text-5xl md:text-6xl text-gray-200 tracking-tight">
-        ▦ Fachwerk
-      </h1>
-      <div v-if="user" class="flex flex-col gap-4 px-4 items-center">
-        <NuxtLink
-          to="/home"
-          class="font-semibold text-center px-4 py-3 w-[24ch] text-lg rounded bg-gray-300 hover:bg-gray-400 transition"
-        >
-          Go to /home
-        </NuxtLink>
-        <button
-          @click="logout"
-          class="text-gray-300 hover:text-gray-400 text-lg"
-        >
-          Logout
-        </button>
+  <div class="p-8 md:p-16 bg-sky-50 min-h-screen">
+    <div class="grid sm:grid-cols-2 md:grid-cols-[1fr_3fr] gap-16">
+      <div>
+        <Intro />
+        <Button v-if="user" @click="onCreate">Create new document</Button>
+        <Login v-if="!user" />
+        <Logout v-if="user" />
       </div>
-      <form
-        v-else
-        @submit.prevent="onSubmit"
-        class="flex flex-col gap-4 px-4 items-center"
-      >
-        <input
-          v-model="form.identifier"
-          placeholder="username"
-          type="text"
-          name="email"
-          required
-          class="font-semibold rounded px-4 py-3 w-[24ch] text-lg"
-        />
-
-        <input
-          v-model="form.password"
-          placeholder="Password"
-          type="password"
-          name="password"
-          required
-          class="font-semibold rounded px-4 py-3 w-[24ch] text-lg"
-        />
-        <div />
-        <button
-          type="submit"
-          class="font-semibold text-center px-4 py-3 w-[24ch] text-lg rounded bg-gray-400 hover:bg-gray-500 transition"
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div
+          v-for="(content, i) in contents"
+          class="relative flex flex-col justify-between rounded prose-a:no-underline prose group"
+          :class="content.frontmatter?.class"
         >
-          {{ loading ? "Loading..." : "Login" }}
-        </button>
-      </form>
+          <NuxtLink
+            :to="'/' + documents[i].id"
+            class="flex flex-col justify-between h-full"
+          >
+            <h1
+              class="text-2xl font-bold text-balance pr-16"
+              v-html="content.title || 'Untitled ' + documents[i].id"
+            />
+            <div class="opacity-70 text-sm !font-sans font-semibold">
+              {{ documents[i].user?.username }}
+            </div>
+          </NuxtLink>
+          <div
+            v-if="isRoot"
+            class="absolute right-0 top-0 p-4 text-sm no-underline opacity-0 transition group-hover:opacity-100 cursor-pointer"
+          >
+            <IconDelete
+              class="size-5 text-red-500"
+              @click.stop="onDelete(documents[i].id)"
+            />
+          </div>
+          <NuxtLink
+            v-if="user"
+            :to="'/' + documents[i].id + '?edit'"
+            class="hidden md:block absolute right-0 bottom-0 p-4 pt-8 pl-8 text-sm no-underline opacity-0 transition group-hover:opacity-100"
+          >
+            <IconEdit class="size-5 hover:text-yellow-500 transition" />
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
-<style>
-.prose p:not(:has(img)) {
-  @apply max-w-[60ch];
-}
-</style>
