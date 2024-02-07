@@ -13,7 +13,7 @@ export default <Partial<Config>>{
       typography: {
         xxs: getTypography(12),
         xs: getTypography(13),
-        "3xl": getTypography(30),
+        "3xl": getTypography(26),
       },
     },
   },

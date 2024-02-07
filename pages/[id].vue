@@ -62,12 +62,6 @@ const pagesEl = ref();
 const { activePage } = useNav(pages, pagesEl, focused);
 const { onEditorClick, row } = useEditor(activePage, pages, editor);
 
-const pagesClass = computed(() => {
-  const baseClasses = "overflow-y-auto h-full";
-  const editClasses = ["snap-y", ""];
-  return twMerge(baseClasses, editClasses[Number(edit.value)]);
-});
-
 const onPaste = (url: string) => {
   focused.value = true;
   let lines = content.value.split(/\r?\n/);
@@ -81,12 +75,12 @@ const onPaste = (url: string) => {
   <div class="grid-cols-2 fixed inset-0" :class="edit ? 'md:grid' : ''">
     <textarea
       ref="editor"
-      class="hidden w-full h-auto outline-none font-mono pl-16 pr-10 pt-6 bg-gray-800 text-white overflow-y-auto"
+      class="hidden w-full h-auto outline-none font-mono pl-12 pr-10 pt-6 bg-gray-800 text-white overflow-y-auto"
       :class="edit ? 'md:block' : ''"
       v-model="content"
       @click="onEditorClick"
     />
-    <div :class="pagesClass" ref="pagesEl">
+    <div class="@container overflow-y-auto h-full" ref="pagesEl">
       <Page
         v-for="(page, i) in pages"
         :page="page"

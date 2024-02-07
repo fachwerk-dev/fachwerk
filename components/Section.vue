@@ -5,7 +5,7 @@ const props = defineProps<{ section: any; edit: boolean }>();
 
 const sectionClass = computed(() => {
   const typeClass = {
-    text: props.edit ? "p-12" : "p-8 md:p-20",
+    text: "p-[2em]",
     image: "",
   };
   return twMerge(typeClass[props.section.type as keyof typeof typeClass]);

@@ -14,19 +14,25 @@ watch(
 );
 
 const defaultClasses = `
+  grid
   max-w-none
   prose
+  prose-sm
+  @2xl:prose-base
+  @3xl:prose-lg
+  @4xl:prose-xl
+  @5xl:prose-2xl
+  @6xl:prose-3xl
+  prose-headings:tracking-[-0.025em]
   prose-headings:text-balance
-  prose-headings:tracking-tight	
-  prose-headings:opacity-90
-  prose-h1:text-[250%]
-  md:prose-h1:text-[300%]
-  prose-h1:tracking-tight	
-  prose-h2:text-[200%]
-  prose-h2:tracking-tight	
+  prose-headings:first:mt-0
+  prose-headings:mt-[0.75em]
+  prose-headings:mb-[0.5em]
+  prose-headings:leading-[1em]
   prose-p:mt-0
   prose-a:break-all
-  prose-code:text-[90%]
+  prose-pre:text-[1em]
+  prose-code:text-[0.8em]
   prose-code:bg-gray-800
   prose-code:rounded
   prose-code:px-1
@@ -39,10 +45,6 @@ const defaultClasses = `
   last:prose-img:m-0
   prose-img:w-full
   prose-img:h-full
-  first:prose-headings:m-0
-  first:prose-headings:mb-2
-  grid
-  relative
 `;
 
 const gridClasses = {
@@ -58,10 +60,7 @@ const gridClasses = {
   10: "grid-cols-2 grid-rows-5",
 };
 
-const editClasses = [
-  "text-[120%] md:text-[170%] w-screen min-h-screen md:snap-center",
-  "aspect-video",
-];
+const editClasses = ["min-h-screen", "aspect-video"];
 
 const pageClass = computed(() =>
   twMerge(
@@ -86,8 +85,17 @@ useIntersectionObserver(
 </script>
 
 <template>
-  <div :class="pageClass" ref="centerElement">
-    <Section v-for="section in page.sections" :section="section" :edit="edit" />
+  <div class="relative">
+    <div :class="pageClass" ref="centerElement">
+      <Section
+        v-for="section in page.sections"
+        :section="section"
+        :edit="edit"
+      />
+    </div>
+    <div
+      ref="topElement"
+      class="invisible absolute left-0 right-0 top-0 h-32"
+    />
   </div>
-  <div ref="topElement" class="invisible absolute left-0 right-0 top-0" />
 </template>
