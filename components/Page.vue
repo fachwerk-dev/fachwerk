@@ -4,10 +4,13 @@ import { twMerge } from "tailwind-merge";
 const props = defineProps<{ page: any; active: boolean; edit: boolean }>();
 const topElement = ref();
 
+// TODO Import this
+const isMd = useMediaQuery("(min-width: 768px)");
+
 watch(
   () => props.active,
   () => {
-    if (props.active) {
+    if (props.active && isMd.value) {
       topElement.value.scrollIntoView({ behavior: "smooth" });
     }
   }
@@ -32,6 +35,8 @@ const defaultClasses = `
   prose-p:mt-0
   prose-a:break-all
   prose-pre:text-[1em]
+  prose-pre:whitespace-pre-wrap
+  md:prose-pre:whitespace-pre
   prose-code:text-[0.8em]
   prose-code:bg-gray-800
   prose-code:rounded

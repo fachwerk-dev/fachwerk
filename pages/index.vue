@@ -75,7 +75,7 @@ const onDelete = async (id: number) => {
       <div class="grid lg:grid-cols-2 gap-6">
         <div
           v-for="(content, i) in contents"
-          class="relative flex flex-col justify-between rounded prose-a:no-underline prose group"
+          class="relative flex flex-col justify-between rounded prose-a:no-underline prose prose-xs md:prose-sm group"
           :class="content.frontmatter?.class"
         >
           <NuxtLink
@@ -83,7 +83,7 @@ const onDelete = async (id: number) => {
             class="flex flex-col justify-between h-full"
           >
             <h1
-              class="text-2xl font-bold text-balance pr-16"
+              class="font-bold text-balance pr-16"
               v-html="content.title || 'Untitled ' + documents[i].id"
             />
             <div class="opacity-70 text-sm !font-sans">

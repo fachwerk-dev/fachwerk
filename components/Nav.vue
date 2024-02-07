@@ -7,7 +7,7 @@ const edit = defineModel("edit");
 const images = defineModel("images");
 </script>
 <template>
-  <div class="flex flex-col justify-between gap-4 p-2 md:p-3 h-full">
+  <div class="flex flex-col justify-between gap-4 p-1 md:p-3 h-full">
     <NuxtLink to="/">
       <IconLeft class="size-6 text-gray-500" />
     </NuxtLink>
