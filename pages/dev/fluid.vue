@@ -14,7 +14,6 @@ prose-headings:mt-[0.75em]
 prose-headings:mb-[0.5em]
 prose-headings:leading-[1em]
 prose-xxs
-@md:prose-xxs
 @lg:prose-xs
 @xl:prose-sm
 @2xl:prose-base
