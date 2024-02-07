@@ -11,6 +11,9 @@ export default <Partial<Config>>{
         serif: ["IBM Plex Serif", "serif"],
       },
       typography: {
+        xxxs: getTypography(11),
+        xxs: getTypography(12),
+        xs: getTypography(13),
         "3xl": getTypography(30),
       },
     },

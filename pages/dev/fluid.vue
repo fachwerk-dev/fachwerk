@@ -3,7 +3,7 @@ const w = ref(50);
 
 const classes = `
 bg-gray-200 
-p-8
+p-[2em]
 h-screen
 prose
 max-w-none
@@ -13,7 +13,12 @@ prose-headings:first:mt-0
 prose-headings:mt-[0.75em]
 prose-headings:mb-[0.5em]
 prose-headings:leading-[1em]
-prose-lg
+prose-xxs
+@md:prose-xxs
+@lg:prose-xs
+@xl:prose-sm
+@2xl:prose-base
+@3xl:prose-lg
 @4xl:prose-xl
 @5xl:prose-2xl
 @6xl:prose-3xl
