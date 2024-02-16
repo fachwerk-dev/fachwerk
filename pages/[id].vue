@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { twMerge } from "tailwind-merge";
 import "katex/dist/katex.min.css";
 
 useTailwind();
@@ -43,7 +42,11 @@ onMounted(() => {
 watchDebounced(
   content,
   async (newContent) => {
-    pages.value = await parseContent(newContent);
+    try {
+      pages.value = await parseContent(newContent);
+    } catch (e) {
+      console.log(e);
+    }
   },
   { immediate: true, debounce: 100 }
 );
